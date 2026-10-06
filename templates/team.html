@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Team — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>👥 Team Logins</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+<p class="muted">Teacher sirf <b>Attendance, Diary, Exams</b> dekh sakta hai · Accountant sirf <b>Fees, Payroll</b> · Owner sab kuch.</p>
+<div class="card">
+<h3>➕ New Login</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Name *<input name="name" required placeholder="Ahmed Khan"></label>
+  <label>Email (login) *<input name="email" type="email" required placeholder="ahmed@school.com" dir="ltr" style="text-align:start"></label>
+  <label>Password *<input name="password" type="password" required minlength="4" placeholder="min 4 harf"></label>
+  <label>Role<select name="role"><option value="teacher">👩‍🏫 Teacher</option><option value="accountant">🧾 Accountant</option></select></label>
+  <div><button class="btn small teal">Create Login</button></div>
+</form>
+</div>
+<table>
+<tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
+{% for m in members %}
+<tr><td>{{ m.name }}</td><td>{{ m.email }}</td>
+<td><span class="badge {{ 'approved' if m.role=='teacher' else 'pending' }}">{{ m.role }}</span></td>
+<td><form method="post" class="inline"><input type="hidden" name="del" value="{{ m.id }}">
+<button class="btn small danger" onclick="return confirm('Delete login?')">✕</button></form></td></tr>
+{% else %}<tr><td colspan="4" class="muted">Abhi koi team member nahi.</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

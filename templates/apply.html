@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="{{ lang }}" {% if rtl %}dir="rtl"{% endif %}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ T('apply') }} — {{ school.name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="{{ url_for('school_home', slug=school.slug) }}">🏫 {{ school.name }}</a>
+  <span class="sp"></span>
+  {% if lang == 'en' %}
+    <a class="btn small ghost" href="{{ url_for('school_apply', slug=school.slug, lang='ur') }}">اردو</a>
+  {% else %}
+    <a class="btn small ghost" href="{{ url_for('school_apply', slug=school.slug, lang='en') }}">English</a>
+  {% endif %}
+</nav>
+
+<main class="wrap">
+  {% with msgs = get_flashed_messages() %}
+    {% if msgs %}<div class="flash">{% for m in msgs %}<p>{{ m }}</p>{% endfor %}</div>{% endif %}
+  {% endwith %}
+
+  {% if done %}
+    <div class="form-card ok" style="margin-top:40px">
+      <div style="font-size:3.4em">🎉</div>
+      <h2>{{ T('done') }}</h2>
+      <p style="font-weight:800;margin-bottom:6px">{{ T('your_app_id') }}:</p>
+      <div style="font-family:var(--head);font-size:2.1em;color:var(--navy);background:#fff;
+           border:3px dashed var(--amber);border-radius:1rem;padding:8px 26px;display:inline-block"
+           dir="ltr">{{ app_id }}</div>
+      <p class="muted" style="margin-top:10px">{{ T('save_id') }}</p>
+      <p><a class="btn teal" href="{{ url_for('school_home', slug=school.slug) }}">🏠 {{ T('home') }}</a></p>
+    </div>
+  {% else %}
+    <div style="text-align:center;margin-top:26px">
+      <span class="kicker">📝 {{ T('apply') }}</span>
+      <h1 style="margin:.3em 0">{{ school.name }}</h1>
+      <p class="muted">{{ T('fill') }}</p>
+    </div>
+    <div class="form-card">
+      <form method="post" class="form" enctype="multipart/form-data">
+        <div class="form-2col">
+          <label>{{ T('sname') }} *<input name="student_name" required placeholder="🧒"></label>
+          <label>{{ T('fname') }}<input name="father_name" placeholder="👨"></label>
+        </div>
+        <div class="form-2col">
+          <label>{{ T('dob') }}<input type="date" name="dob"></label>
+          <label>{{ T('gender') }}<select name="gender">
+            <option value=""></option><option>{{ T('male') }}</option><option>{{ T('female') }}</option>
+          </select></label>
+        </div>
+        <div class="form-2col">
+          <label>{{ T('class') }} *<input name="class_applying" required placeholder="🎒"></label>
+          <label>{{ T('pschool') }}<input name="prev_school" placeholder="🏫"></label>
+        </div>
+        <label>{{ T('photo') }}<input type="file" name="photo" accept="image/*" id="photoInp">
+        <small>📷 JPG / PNG / WebP — max 4MB</small></label>
+        <div style="text-align:center;margin-top:-6px">
+          <img id="photoPrev" alt="" style="display:none;max-width:140px;border-radius:1rem;border:3px solid var(--teal)">
+        </div>
+        <script>
+        document.getElementById('photoInp').addEventListener('change', function(e){
+          var f = e.target.files[0]; if(!f) return;
+          var r = new FileReader();
+          r.onload = function(ev){ var i = document.getElementById('photoPrev');
+            i.src = ev.target.result; i.style.display = 'inline-block'; };
+          r.readAsDataURL(f);
+        });
+        </script>
+        <label>{{ T('phone') }} *<input name="phone" required placeholder="📞 03xx-xxxxxxx" dir="ltr" style="text-align:start"></label>
+        <label>{{ T('address') }}<textarea name="address" rows="2" placeholder="📍"></textarea></label>
+        <div style="text-align:center;margin-top:20px">
+          <button class="btn big" type="submit">🚀 {{ T('submit') }}</button>
+        </div>
+      </form>
+    </div>
+    <p style="text-align:center"><a href="{{ url_for('school_home', slug=school.slug) }}">← {{ T('home') }}</a></p>
+  {% endif %}
+</main>
+<footer class="plain"><p>{{ school.name }} · powered by 🏫 SchoolWeb</p></footer>
+</body>
+</html>

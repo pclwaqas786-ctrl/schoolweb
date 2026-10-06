@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Merit — {{ exam.name }}{% endblock %}
+{% block body %}
+<h2>🏆 {{ exam.name }} — Merit ({{ cls }})</h2>
+<nav class="tabs"><a href="{{ url_for('exams') }}">← Exams</a></nav>
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Class<select name="class" onchange="this.form.submit()">{% for c in classes %}<option {{ 'selected' if c==cls }}>{{ c }}</option>{% endfor %}</select></label>
+</form>
+<table>
+<tr><th>Pos</th><th>Student</th><th>Obtained</th><th>Total</th><th>%</th><th>Grade</th><th></th></tr>
+{% for t in totals %}
+<tr><td>{% if loop.index==1 %}🥇{% elif loop.index==2 %}🥈{% elif loop.index==3 %}🥉{% else %}{{ loop.index }}{% endif %}</td>
+<td><b>{{ t.st.name }}</b></td><td>{{ fmt(t.ob) }}</td><td>{{ fmt(t.mx) }}</td>
+<td>{{ "%.1f"|format(t.pct) }}%</td><td><span class="badge {{ 'approved' if t.grade!='F' else 'rejected' }}">{{ t.grade }}</span></td>
+<td><a class="btn small teal" href="{{ url_for('report_card', eid=exam.id, sid=t.st.id) }}">🖨️ Report Card</a></td></tr>
+{% else %}<tr><td colspan="7" class="muted">Marks enter nahi huay.</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

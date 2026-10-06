@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Attendance — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>📋 Attendance</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+{% if counts.present or counts.absent or counts.late or counts.leave %}
+<section class="stat-cards">
+  <div class="stat-card s1"><div class="n">{{ counts.present }}</div><div class="l">✅ Present</div></div>
+  <div class="stat-card s2"><div class="n">{{ counts.absent }}</div><div class="l">❌ Absent</div></div>
+  <div class="stat-card s3"><div class="n">{{ counts.late }}</div><div class="l">⏰ Late</div></div>
+  <div class="stat-card s4"><div class="n">{{ counts.leave }}</div><div class="l">🏖️ Leave</div></div>
+</section>
+{% endif %}
+<div class="card">
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+  <label>Class<select name="class">{% for c in classes %}<option {{ 'selected' if c==cls }}>{{ c }}</option>{% endfor %}</select></label>
+  <label>Date<input type="date" name="date" value="{{ day }}"></label>
+  <div><button class="btn small teal">Show</button></div>
+</form>
+</div>
+{% if students %}
+<form method="post">
+<input type="hidden" name="class" value="{{ cls }}">
+<input type="hidden" name="date" value="{{ day }}">
+<table>
+<tr><th>#</th><th>Student</th><th>Father</th><th colspan="4">Status</th></tr>
+{% for st in students %}
+<tr><td>{{ loop.index }}</td><td><b>{{ st.name }}</b></td><td>{{ st.father_name or '—' }}</td>
+{% set m = marked.get(st.id, 'present') %}
+<td><label><input type="radio" name="st_{{ st.id }}" value="present" {{ 'checked' if m=='present' }}> ✅</label></td>
+<td><label><input type="radio" name="st_{{ st.id }}" value="absent" {{ 'checked' if m=='absent' }}> ❌</label></td>
+<td><label><input type="radio" name="st_{{ st.id }}" value="late" {{ 'checked' if m=='late' }}> ⏰</label></td>
+<td><label><input type="radio" name="st_{{ st.id }}" value="leave" {{ 'checked' if m=='leave' }}> 🏖️</label></td>
+</tr>
+{% endfor %}
+</table>
+<button class="btn teal">💾 Save Attendance</button>
+</form>
+{% elif cls %}<p class="muted">Is class me koi student nahi.</p>
+{% else %}<p class="muted">Pehle koi student admit karein.</p>{% endif %}
+
+{% if absent %}
+<h3>📲 Absent — WhatsApp Alerts (free)</h3>
+<p class="muted">Button dabayein — WhatsApp khul jayega, message ready hoga, bas Send.</p>
+<table>
+<tr><th>Student</th><th>Class</th><th>Phone</th><th></th></tr>
+{% for st, link in absent %}
+<tr><td>{{ st.name }}</td><td>{{ st.class }}</td><td>{{ st.phone or '—' }}</td>
+<td>{% if link %}<a class="btn small" style="background:#25D366;color:#fff" href="{{ link }}" target="_blank">📲 Send Alert</a>
+{% else %}<small class="muted">no phone</small>{% endif %}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

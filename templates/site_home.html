@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="{{ lang }}" {% if rtl %}dir="rtl"{% endif %}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ school.name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="{{ url_for('school_home', slug=school.slug) }}">🏫 {{ school.name }}</a>
+  <span class="sp"></span>
+  <a href="{{ url_for('school_home', slug=school.slug) }}">{{ T('home') }}</a>
+  <a href="#notices">{{ T('notices') }}</a>
+  <a class="btn small" href="{{ url_for('school_apply', slug=school.slug) }}">📝 {{ T('apply') }}</a>
+  {% if lang == 'en' %}
+    <a class="btn small ghost" href="{{ url_for('school_home', slug=school.slug, lang='ur') }}">اردو</a>
+  {% else %}
+    <a class="btn small ghost" href="{{ url_for('school_home', slug=school.slug, lang='en') }}">English</a>
+  {% endif %}
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="dots"></div>
+  <div class="blob" style="width:200px;height:200px;background:#2FBF71;top:-50px;inset-inline-start:-40px"></div>
+  <div class="blob" style="width:160px;height:160px;background:#FFC107;bottom:20px;inset-inline-end:-30px"></div>
+  <div class="blob" style="width:110px;height:110px;background:#17A2B8;top:24%;inset-inline-end:9%"></div>
+
+  <div class="float-card fc1"><span class="ic">📝</span> {{ T('online100') }}</div>
+  <div class="float-card fc2"><span class="ic">🌐</span> {{ T('bilingual') }}</div>
+
+  <span class="kicker">🌱 {{ T('tag_admission') }}</span>
+  <h1>{{ T('welcome') }}<br><span class="sq">{{ school.name }}</span></h1>
+  {% if school.intro %}<p class="lead">{{ school.intro }}</p>{% endif %}
+  <div class="cta-row">
+    <a class="btn big" href="{{ url_for('school_apply', slug=school.slug) }}">📝 {{ T('apply') }}</a>
+    <a class="btn big white" href="#notices">📢 {{ T('view_notices') }}</a>
+  </div>
+</header>
+
+<div class="wave"><svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C240,90 480,0 720,30 C960,60 1200,10 1440,40 L1440,70 L0,70 Z"/></svg></div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="row">
+    <div class="stat reveal"><div class="num">📝</div><div class="lbl">{{ T('online100') }}</div></div>
+    <div class="stat reveal"><div class="num" data-count="{{ notices|length }}">0</div><div class="lbl">📢 {{ T('notices') }}</div></div>
+    <div class="stat reveal"><div class="num">🌐</div><div class="lbl">{{ T('bilingual') }}</div></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <!-- QUICK TILES -->
+  <div class="tiles">
+    <a class="tile t1 reveal" href="{{ url_for('school_apply', slug=school.slug) }}">📝 {{ T('apply') }}<small>{{ T('fill') }}</small></a>
+    <a class="tile t2 reveal" href="#notices">📢 {{ T('notices') }}<small>{{ notices|length }} {{ T('notices') }}</small></a>
+    <a class="tile t3 reveal" href="#contact">📞 {{ T('contact') }}<small>{{ school.phone or '—' }}</small></a>
+  </div>
+
+  {% if school.principal_msg %}
+  <section class="block" style="padding-top:10px">
+    <div class="sec-head reveal">
+      <span class="kick" style="background:#EFE7FB;color:#6a3fb5">💬 {{ T('principal') }}</span>
+    </div>
+    <div class="card reveal" style="border-top-color:#8E5BD6;font-size:1.1em">
+      <p style="margin:0">“{{ school.principal_msg }}”</p>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- NOTICES -->
+  <section class="block" id="notices" style="padding-top:10px">
+    <div class="sec-head reveal">
+      <span class="kick" style="background:#FFEDE8;color:#d94f42">📢 {{ T('notices') }}</span>
+      <h2>Latest <span class="sq">{{ T('notices') }}</span></h2>
+    </div>
+    <div class="card reveal" style="border-top-color:#FF6B5E">
+      {% for n in notices %}
+        <div class="notice"><b>{{ n.title }}</b>
+          {% if n.created_at %}<span class="d">{{ n.created_at[:10] }}</span>{% endif %}
+          {% if n.body %}<p style="margin:.3em 0 0">{{ n.body }}</p>{% endif %}
+        </div>
+      {% else %}<p class="muted">{{ T('no_notices') }}</p>{% endfor %}
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="block" id="contact" style="padding-top:0">
+    <div class="sec-head reveal">
+      <span class="kick" style="background:#E3F6F9;color:#0f7d8d">📍 {{ T('contact') }}</span>
+    </div>
+    <div class="contact-row reveal">
+      {% if school.phone %}<div class="contact-chip">📞 {{ school.phone }}</div>{% endif %}
+      {% if school.address %}<div class="contact-chip">📍 {{ school.address }}</div>{% endif %}
+    </div>
+
+    <div class="cta-banner reveal">
+      <h2>🎒 {{ T('cta_title') }}</h2>
+      <p>{{ T('cta_text') }}</p>
+      <a class="btn big white" href="{{ url_for('school_apply', slug=school.slug) }}">📝 {{ T('apply') }}</a>
+    </div>
+  </section>
+</main>
+
+<div class="site-footer">
+  <div class="foot-grid">
+    <div><h4>🏫 {{ school.name }}</h4><p>{{ school.intro or '' }}</p></div>
+    <div><h4>🔗 {{ T('quick') }}</h4>
+      <p><a href="{{ url_for('school_home', slug=school.slug) }}">{{ T('home') }}</a><br>
+      <a href="{{ url_for('school_apply', slug=school.slug) }}">{{ T('apply') }}</a><br>
+      <a href="#notices">{{ T('notices') }}</a><br>
+      <a href="#contact">{{ T('contact') }}</a></p></div>
+    <div><h4>📞 {{ T('contact') }}</h4><p>{{ school.phone or '—' }}<br>{{ school.address or '' }}</p></div>
+    <div><h4>🌱 {{ T('tag_admission') }}</h4><p><a href="{{ url_for('school_apply', slug=school.slug) }}">📝 {{ T('apply') }}</a></p></div>
+  </div>
+  <div class="copy">{{ school.name }} · powered by 🏫 SchoolWeb</div>
+</div>
+<script src="{{ url_for('static', filename='site.js') }}"></script>
+</body>
+</html>

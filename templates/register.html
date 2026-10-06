@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Register — SchoolWeb{% endblock %}
+{% block body %}
+<h2>Apne school ko register karein</h2>
+<form method="post" class="form">
+  <label>School ka naam<input name="name" required placeholder="Roshan School"></label>
+  <label>Website slug (chhota naam)<input name="slug" required placeholder="roshan-school" pattern="[a-z0-9-]{3,40}">
+  <small>Apki website: /s/<b>roshan-school</b>/</small></label>
+  <label>Email<input type="email" name="email" required></label>
+  <label>Password<input type="password" name="password" required minlength="6"></label>
+  <button class="btn" type="submit">Register — Free</button>
+</form>
+{% endblock %}

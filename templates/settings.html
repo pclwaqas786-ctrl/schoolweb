@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Email Settings — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>Email Settings</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+<p class="muted">Jab koi admission form bharega to is email pe notification jayega.
+Ghar ke PC se direct email <b>nahi</b> jata (ISP port 25 block karta hai) — is liye Gmail ka SMTP lagayein (free).</p>
+<form method="post" class="form">
+  <label>SMTP host<input name="smtp_host" value="{{ school.smtp_host }}" placeholder="smtp.gmail.com"></label>
+  <label>SMTP port<input name="smtp_port" value="{{ school.smtp_port }}"></label>
+  <label>SMTP username (email)<input name="smtp_user" value="{{ school.smtp_user }}" placeholder="you@gmail.com"></label>
+  <label>SMTP password / App password<input type="password" name="smtp_pass" value="{{ school.smtp_pass }}">
+  <small>Gmail ke liye: Google Account → Security → 2-Step Verification → App passwords se banayein.</small></label>
+  <label><input type="checkbox" name="smtp_tls" value="1" {{ 'checked' if school.smtp_tls else '' }}> STARTTLS (port 587) — warna SSL (port 465)</label>
+  <label>Notification jaye is email pe<input type="email" name="notify_email" value="{{ school.notify_email }}" placeholder="principal@school.com"></label>
+  <button class="btn" type="submit">Save</button>
+</form>
+{% endblock %}

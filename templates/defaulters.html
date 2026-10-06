@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Defaulters — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>⚠️ Fee Defaulters</h2>
+<nav class="tabs"><a href="{{ url_for('fees', month=month) }}">← Fees</a></nav>
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="{{ month }}"></label>
+  <div><button class="btn small">Show</button></div>
+</form>
+<p class="muted">💡 <b>Free WhatsApp:</b> button dabayein — WhatsApp khulega, reminder message pehle se likha hoga, bas Send dabana hai. Koi paid SMS nahi.</p>
+<table>
+<tr><th>Student</th><th>Class</th><th>Due</th><th>Status</th><th></th><th></th></tr>
+{% for r, link in rows %}
+<tr><td>{{ r.sname }}</td><td>{{ r.sclass }}</td>
+<td><b style="color:#d94f42">Rs {{ fmt((r.total or 0)-(r.discount or 0)-(r.paid or 0)) }}</b></td>
+<td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+<td><a class="btn small teal" href="{{ url_for('collect_fee', inv=r.id) }}">💵 Collect</a></td>
+<td>{% if link %}<a class="btn small" style="background:#25D366;color:#fff" href="{{ link }}" target="_blank">📲 WhatsApp</a>
+{% else %}<small class="muted">no phone</small>{% endif %}</td></tr>
+{% else %}<tr><td colspan="6" class="muted">🎉 Is month me koi defaulter nahi!</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

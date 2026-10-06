@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Payroll — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>💵 Payroll — {{ month }}</h2>
+<nav class="tabs">
+  <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+  <a href="{{ url_for('staff') }}">👔 Staff</a>
+</nav>
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="{{ month }}"></label>
+  <div><button class="btn small">Show</button></div>
+</form>
+{% if session.get('role') == 'owner' %}
+<div class="card">
+<h3>➕ Salary Slip</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <input type="hidden" name="month" value="{{ month }}">
+  <label>Staff *<select name="staff_id" id="stSel">{% for st in staff %}
+    <option value="{{ st.id }}" data-sal="{{ st.salary_monthly or 0 }}">{{ st.name }} ({{ st.designation }})</option>{% endfor %}</select></label>
+  <label>Basic (Rs)<input name="basic" id="basicInp" type="number" step="any"></label>
+  <label>Allowances (Rs)<input name="allowances" type="number" step="any" value="0"></label>
+  <label>Deductions (Rs)<input name="deductions" type="number" step="any" value="0"></label>
+  <label>Advance Adjusted (Rs)<input name="advance" type="number" step="any" value="0"></label>
+  <div><button class="btn small teal">Generate Slip</button></div>
+</form>
+<script>
+var sel = document.getElementById('stSel');
+function fill(){ sel && (document.getElementById('basicInp').value = sel.options[sel.selectedIndex].dataset.sal || 0); }
+sel && sel.addEventListener('change', fill); fill();
+</script>
+</div>
+{% endif %}
+<section class="stat-cards">
+  <div class="stat-card s1"><div class="n">Rs {{ fmt(tot) }}</div><div class="l">Total payroll ({{ month }})</div></div>
+</section>
+<table>
+<tr><th>Staff</th><th>Basic</th><th>Allow.</th><th>Deduct.</th><th>Advance</th><th>Net</th><th>Status</th><th></th></tr>
+{% for r in slips %}
+<tr><td><b>{{ r.sname }}</b><br><small class="muted">{{ r.designation }}</small></td>
+<td>{{ fmt(r.basic or 0) }}</td><td>{{ fmt(r.allowances or 0) }}</td><td>{{ fmt(r.deductions or 0) }}</td>
+<td>{{ fmt(r.advance or 0) }}</td><td><b>Rs {{ fmt(r.net or 0) }}</b></td>
+<td>{% if r.paid %}<span class="badge paid">paid</span>{% else %}<span class="badge unpaid">unpaid</span>{% endif %}</td>
+<td><a class="btn small teal" href="{{ url_for('payslip', pid=r.id) }}">🖨️ Slip</a>
+{% if session.get('role') == 'owner' and not r.paid %}
+<form method="post" class="inline"><input type="hidden" name="month" value="{{ month }}">
+<input type="hidden" name="mark_paid" value="{{ r.id }}"><button class="btn small">✅ Mark Paid</button></form>
+{% endif %}</td></tr>
+{% else %}<tr><td colspan="8" class="muted">Is month ki koi slip nahi.</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

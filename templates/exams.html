@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Exams — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>📊 Exams & Results</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+<div class="card">
+<h3>➕ New Exam</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Exam name *<input name="name" required placeholder="First Term 2026"></label>
+  <label>Year<input name="year" type="number" value="{{ year }}"></label>
+  <label style="grid-column:1/-1">Subjects * <small class="muted">(comma se: Urdu,English,Math,Science)</small>
+    <input name="subjects" required placeholder="Urdu,English,Math,Science,Islamiat"></label>
+  <div><button class="btn small teal">Create Exam</button></div>
+</form>
+</div>
+{% for ex in exams %}
+<div class="card">
+  <h3>{{ ex.name }} <span class="badge approved">{{ ex.year }}</span></h3>
+  <p class="muted">{{ ex.subjects }}</p>
+  <form method="get" action="{{ url_for('enter_marks', eid=ex.id) }}" class="inline">
+    <label><small>Class</small> <select name="class">{% for c in classes %}<option>{{ c }}</option>{% endfor %}</select></label>
+    <button class="btn small teal">✏️ Enter Marks</button>
+  </form>
+  <form method="get" action="{{ url_for('exam_merit', eid=ex.id) }}" class="inline">
+    <label><small>Class</small> <select name="class">{% for c in classes %}<option>{{ c }}</option>{% endfor %}</select></label>
+    <button class="btn small">🏆 Merit List</button>
+  </form>
+  <form method="post" class="inline"><input type="hidden" name="del" value="{{ ex.id }}">
+    <button class="btn small danger" onclick="return confirm('Exam + saare marks delete?')">✕</button></form>
+</div>
+{% else %}<p class="muted">Abhi koi exam nahi — upar se banayein.</p>{% endfor %}
+{% endblock %}

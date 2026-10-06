@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Collect Fee — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>💵 Collect Fee</h2>
+<nav class="tabs"><a href="{{ url_for('fees', month=inv.month) }}">← Fees</a></nav>
+<div class="card">
+  <h3>{{ inv.sname }} <span class="badge approved">{{ inv.sclass }}</span></h3>
+  <p class="muted">{{ inv.month }} · {{ inv.items }}</p>
+  <p><b>Total:</b> Rs {{ fmt(inv.total or 0) }}
+  {% if inv.discount %}· <b>Discount:</b> Rs {{ fmt(inv.discount) }}{% endif %} ·
+  <b>Paid:</b> Rs {{ fmt(inv.paid or 0) }} ·
+  <b>Balance:</b> <span style="color:#d94f42">Rs {{ fmt((inv.total or 0)-(inv.discount or 0)-(inv.paid or 0)) }}</span>
+  <span class="badge {{ inv.status }}">{{ inv.status }}</span></p>
+  {% if inv.receipt_no %}<p>🧾 Receipt: <code dir="ltr">{{ inv.receipt_no }}</code>
+    <a class="btn small teal" href="{{ url_for('fee_receipt', inv=inv.id) }}">View Receipt</a>
+    <a class="btn small" href="{{ url_for('fee_challan', inv=inv.id) }}">🧾 Challan</a></p>{% endif %}
+</div>
+{% if session.get('role') == 'owner' %}
+<div class="card">
+  <h3>🎁 Discount / Concession</h3>
+  <form method="post" class="form" style="display:flex;gap:10px;align-items:end">
+    <label>Discount (Rs)<input name="discount" type="number" step="any" min="0" value="{{ fmt(inv.discount or 0) }}"></label>
+    <div><button name="set_discount" value="1" class="btn small">Apply</button></div>
+  </form>
+</div>
+{% endif %}
+<div class="card">
+  <h3>➕ New Payment</h3>
+  <form method="post" enctype="multipart/form-data" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <label>Amount (Rs) *<input name="amount" type="number" step="any" min="1" required
+      value="{{ fmt((inv.total or 0)-(inv.discount or 0)-(inv.paid or 0)) }}"></label>
+    <label>Date<input type="date" name="pay_date"></label>
+    <label>Method<select name="method"><option value="cash">Cash</option><option value="bank">Bank Transfer</option><option value="easypaisa">Easypaisa</option><option value="jazzcash">JazzCash</option></select></label>
+    <label>Proof (optional)<input type="file" name="proof" accept="image/*,.pdf"></label>
+    <label style="grid-column:1/-1">Note<input name="note" placeholder="optional"></label>
+    <div><button class="btn teal">✅ Save Payment</button></div>
+  </form>
+</div>
+<h3>Payment history</h3>
+<table>
+<tr><th>Date</th><th>Amount</th><th>Method</th><th>Proof</th><th>Note</th></tr>
+{% for p in pays %}
+<tr><td>{{ p.pay_date }}</td><td>Rs {{ fmt(p.amount or 0) }}</td><td>{{ p.method }}</td>
+<td>{% if p.proof %}<a href="{{ url_for('static', filename='uploads/proofs/' + p.proof) }}" target="_blank">🖼️</a>{% else %}—{% endif %}</td>
+<td>{{ p.note }}{% if not p.verified %} <small class="muted">(pending)</small>{% endif %}</td></tr>
+{% else %}<tr><td colspan="5" class="muted">Abhi koi payment nahi.</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

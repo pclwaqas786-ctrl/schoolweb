@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Fee Challan — {{ inv.sname }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Nunito,sans-serif;background:#f4f6fa;margin:0;padding:24px}
+  .ch{max-width:600px;margin:auto;background:#fff;border:3px solid #00394F;border-radius:6px;overflow:hidden}
+  .h{background:#00394F;color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+  .h h2{margin:0}.b{padding:18px 22px}
+  table{width:100%;border-collapse:collapse;margin:10px 0}
+  td{padding:7px 4px;border-bottom:1px solid #e3e8f0}
+  .tot{font-weight:800;font-size:1.15em}
+  .due{color:#d94f42;font-size:1.35em;font-weight:800}
+  .copies{display:flex;gap:8px;margin-top:14px}
+  .copy{flex:1;border:2px dashed #8a94a6;border-radius:8px;text-align:center;padding:6px;font-size:.8em;font-weight:800;color:#8a94a6}
+  .btn{background:#17A2B8;color:#fff;border:0;border-radius:999px;padding:10px 26px;font-weight:800;cursor:pointer;margin:14px 6px}
+  .toolbar{text-align:center}
+  @media print{.toolbar{display:none}body{background:#fff;padding:0}}
+</style></head>
+<body>
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">🖨️ Print Challan</button>
+  <a href="{{ url_for('fees', month=inv.month) }}"><button class="btn" style="background:#6b7686">← Fees</button></a>
+</div>
+<div class="ch" dir="ltr">
+  <div class="h"><div><h2>🏫 {{ school.name }}</h2><div>FEE CHALLAN — {{ inv.month }}</div></div>
+  <div style="text-align:end"><div>Challan No</div><b>{{ inv.receipt_no or ('CH-' + inv.id|string) }}</b></div></div>
+  <div class="b">
+    <table>
+      <tr><td><b>Student</b></td><td>{{ inv.sname }} ({{ inv.sclass }})</td><td><b>ID</b></td><td>{{ inv.app_id or '—' }}</td></tr>
+      <tr><td><b>Father</b></td><td colspan="3">{{ inv.father_name or '—' }}</td></tr>
+    </table>
+    <table>
+      <tr style="background:#f0f4f8;font-weight:800"><td>Particulars</td><td style="text-align:end">Amount</td></tr>
+      <tr><td>{{ inv.items }}</td><td style="text-align:end">Rs {{ fmt(inv.total or 0) }}</td></tr>
+      {% if inv.discount %}<tr><td>Discount / Concession</td><td style="text-align:end">− Rs {{ fmt(inv.discount) }}</td></tr>{% endif %}
+      <tr><td>Paid so far</td><td style="text-align:end">− Rs {{ fmt(inv.paid or 0) }}</td></tr>
+      <tr class="tot"><td>Payable Now</td><td style="text-align:end" class="due">Rs {{ fmt(due) }}</td></tr>
+    </table>
+    <p><small>Due date: 10th of month · JazzCash / EasyPaisa / Bank se jama karwa ke screenshot parent portal pe upload karein.</small></p>
+    <div class="copies"><div class="copy">BANK COPY</div><div class="copy">SCHOOL COPY</div><div class="copy">PARENT COPY</div></div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between">
+      <span>__________<br><small>Received by</small></span><span>__________<br><small>Seal & Sign</small></span>
+    </div>
+  </div>
+</div>
+</body></html>

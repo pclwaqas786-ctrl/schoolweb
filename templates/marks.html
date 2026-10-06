@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Marks — {{ exam.name }}{% endblock %}
+{% block body %}
+<h2>✏️ {{ exam.name }} — {{ cls }}</h2>
+<nav class="tabs"><a href="{{ url_for('exams') }}">← Exams</a></nav>
+<div class="card">
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Class<select name="class">{% for c in classes %}<option {{ 'selected' if c==cls }}>{{ c }}</option>{% endfor %}</select></label>
+  <div><button class="btn small teal">Show</button></div>
+</form>
+</div>
+{% if students %}
+<form method="post">
+<input type="hidden" name="class" value="{{ cls }}">
+<div style="overflow-x:auto"><table>
+<tr><th>Student</th>{% for s in subjects %}<th>{{ s }}<br><small>/100</small></th>{% endfor %}</tr>
+{% for st in students %}
+<tr><td><b>{{ st.name }}</b></td>
+{% for s in subjects %}
+<td><input type="number" step="any" min="0" max="100" name="m_{{ st.id }}_{{ loop.index0 }}"
+  value="{{ fmt(old.get((st.id, s), '')) if old.get((st.id, s), '') != '' else '' }}"
+  style="width:70px;padding:6px;border-radius:8px;border:2px solid #dfe5ee"></td>
+{% endfor %}</tr>
+{% endfor %}
+</table></div>
+<button class="btn teal">💾 Save Marks</button>
+</form>
+{% else %}<p class="muted">Is class me koi student nahi.</p>{% endif %}
+{% endblock %}

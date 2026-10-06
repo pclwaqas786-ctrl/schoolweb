@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Fees — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>💰 Fee Management</h2>
+<nav class="tabs">
+  <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+  <a href="{{ url_for('defaulters', month=month) }}">⚠️ Defaulters</a>
+</nav>
+
+<section class="stat-cards">
+  <div class="stat-card s1"><div class="n">Rs {{ fmt(tot) }}</div><div class="l">Total ({{ month }})</div></div>
+  <div class="stat-card s2"><div class="n">Rs {{ fmt(paid) }}</div><div class="l">Collected</div></div>
+  <div class="stat-card s4"><div class="n">Rs {{ fmt(disc) }}</div><div class="l">Discounts</div></div>
+  <div class="stat-card s3"><div class="n">Rs {{ fmt(due) }}</div><div class="l">Due</div></div>
+</section>
+
+{% if pending_proofs %}
+<h3>📤 Payment Proofs — Verify Pending ({{ pending_proofs|length }})</h3>
+<p class="muted">Parents ne JazzCash/EasyPaisa se bhej ke proof upload kiya hai — verify karein ya reject.</p>
+<table>
+<tr><th>Student</th><th>Month</th><th>Amount</th><th>Method</th><th>Note</th><th>Proof</th><th></th></tr>
+{% for p in pending_proofs %}
+<tr><td>{{ p.sname }}</td><td>{{ p.month }}</td><td><b>Rs {{ fmt(p.amount or 0) }}</b></td>
+<td>{{ p.method }}</td><td><small>{{ p.note }}</small></td>
+<td>{% if p.proof %}<a href="{{ url_for('static', filename='uploads/proofs/' + p.proof) }}" target="_blank">🖼️ View</a>{% else %}<small class="muted">—</small>{% endif %}</td>
+<td><form method="post" action="{{ url_for('verify_payment', pid=p.id) }}" class="inline">
+<input type="hidden" name="month" value="{{ month }}">
+<button name="action" value="verify" class="btn small teal">✅ Verify</button>
+<button name="action" value="reject" class="btn small danger" onclick="return confirm('Reject?')">✕</button></form></td></tr>
+{% endfor %}
+</table>
+{% endif %}
+
+<h3>🧾 Fee Heads</h3>
+{% if session.get('role') == 'owner' %}
+<div class="card">
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Name *<input name="name" required placeholder="Tuition Fee"></label>
+  <label>Amount (Rs) *<input name="amount" type="number" step="any" min="0" required placeholder="1500"></label>
+  <label>Classes <small class="muted">(all, ya comma se: Class 1,Class 2)</small><input name="classes" value="all"></label>
+  <label>Frequency<select name="freq"><option value="monthly">Monthly</option><option value="once">One-time</option></select></label>
+  <div><button class="btn small teal">➕ Add Head</button></div>
+</form>
+</div>
+{% endif %}
+<table>
+<tr><th>Head</th><th>Amount</th><th>Classes</th><th>Freq</th>{% if session.get('role') == 'owner' %}<th></th>{% endif %}</tr>
+{% for h in heads %}
+<tr><td>{{ h.name }}</td><td>Rs {{ fmt(h.amount or 0) }}</td><td>{{ h.classes }}</td><td>{{ h.freq }}</td>
+{% if session.get('role') == 'owner' %}<td><form method="post" class="inline"><input type="hidden" name="del_head" value="{{ h.id }}">
+<button class="btn small danger" onclick="return confirm('Delete?')">✕</button></form></td>{% endif %}</tr>
+{% else %}<tr><td colspan="5" class="muted">Koi fee head nahi — owner add karega.</td></tr>
+{% endfor %}
+</table>
+
+<h3>📅 Monthly Invoices</h3>
+<div class="card">
+<form method="post" action="{{ url_for('gen_invoices') }}" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="{{ month }}" required></label>
+  <div><button class="btn teal">⚙️ Generate Invoices</button></div>
+</form>
+<p class="muted"><small>Pichle months ka baqaya <b>arrears</b> ke tor pe auto-add ho jata hai. Pehle se bani invoice dobara nahi banegi.</small></p>
+</div>
+
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="{{ month }}"></label>
+  <div><button class="btn small">Show</button></div>
+</form>
+<div style="overflow-x:auto"><table>
+<tr><th>Student</th><th>Class</th><th>Items</th><th>Total</th><th>Discount</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr>
+{% for i in invoices %}
+<tr><td>{{ i.sname }}</td><td>{{ i.sclass }}</td><td><small>{{ i.items }}</small></td>
+<td>Rs {{ fmt(i.total or 0) }}</td><td>{% if i.discount %}Rs {{ fmt(i.discount) }}{% else %}—{% endif %}</td>
+<td>Rs {{ fmt(i.paid or 0) }}</td>
+<td><b>Rs {{ fmt((i.total or 0)-(i.discount or 0)-(i.paid or 0)) }}</b></td>
+<td><span class="badge {{ i.status }}">{{ i.status }}</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="{{ url_for('collect_fee', inv=i.id) }}">💵 Collect</a>
+<a class="btn small" href="{{ url_for('fee_challan', inv=i.id) }}">🧾 Challan</a></td></tr>
+{% else %}<tr><td colspan="9" class="muted">Is month ki koi invoice nahi — Generate dabayein.</td></tr>
+{% endfor %}
+</table></div>
+{% endblock %}

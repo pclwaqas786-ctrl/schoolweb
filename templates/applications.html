@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Applications — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>Admission Applications</h2>
+<nav class="tabs">
+  <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+  <a class="{{ '' if f else 'on' }}" href="{{ url_for('applications') }}">All</a>
+  <a class="{{ 'on' if f=='pending' else '' }}" href="{{ url_for('applications', status='pending') }}">Pending</a>
+  <a class="{{ 'on' if f=='approved' else '' }}" href="{{ url_for('applications', status='approved') }}">Approved</a>
+  <a class="{{ 'on' if f=='rejected' else '' }}" href="{{ url_for('applications', status='rejected') }}">Rejected</a>
+</nav>
+{% for a in apps %}
+<div class="card">
+  <h3>{{ a.student_name }} <span class="badge {{ a.status }}">{{ a.status }}</span></h3>
+  <p><b>🆔 Application ID:</b> <code dir="ltr">{{ a.app_id or '—' }}</code></p>
+  {% if a.photo %}<p><img src="{{ url_for('static', filename='uploads/' + a.photo) }}" alt="photo"
+     style="width:74px;height:74px;object-fit:cover;border-radius:14px;border:3px solid var(--teal)"></p>{% endif %}
+  <p><b>Father:</b> {{ a.father_name }} · <b>DOB:</b> {{ a.dob }} · <b>Gender:</b> {{ a.gender }}</p>
+  <p><b>Class:</b> {{ a.class_applying }} · <b>Prev school:</b> {{ a.prev_school }}</p>
+  <p><b>Phone:</b> {{ a.phone }} · <b>Address:</b> {{ a.address }}</p>
+  <form method="post" class="inline">
+    <input type="hidden" name="id" value="{{ a.id }}">
+    <button name="status" value="approved" class="btn small">Approve</button>
+    <button name="status" value="rejected" class="btn small danger">Reject</button>
+    <button name="status" value="pending" class="btn small ghost">Pending</button>
+  </form>
+  <a class="btn small teal" href="{{ url_for('app_card', aid=a.id) }}">🪪 ID Card</a>
+  {% if a.status == 'approved' %}
+  <form method="post" action="{{ url_for('admit_student', aid=a.id) }}" class="inline">
+    <button class="btn small" style="background:var(--green);color:#fff">➕ Admit as Student</button>
+  </form>
+  {% endif %}
+</div>
+{% else %}<p class="muted">Koi application nahi.</p>{% endfor %}
+{% endblock %}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Receipt {{ inv.receipt_no }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Nunito,sans-serif;background:#f4f6fa;margin:0;padding:24px}
+  .rcpt{max-width:520px;margin:auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #00394f22}
+  .h{background:linear-gradient(120deg,#2FBF71,#00394F);color:#fff;padding:18px 24px}
+  .h h2{margin:0}.b{padding:20px 24px}.row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #e3e8f0}
+  .tot{font-size:1.3em;font-weight:800}.btn{background:#17A2B8;color:#fff;border:0;border-radius:999px;padding:10px 26px;font-weight:800;cursor:pointer;margin:16px 6px}
+  .toolbar{text-align:center}
+  .sign{margin-top:26px;display:flex;justify-content:space-between}
+  @media print{.toolbar{display:none}body{background:#fff;padding:0}.rcpt{box-shadow:none}}
+</style></head>
+<body>
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">🖨️ Print Receipt</button>
+  <a href="{{ url_for('fees', month=inv.month) }}"><button class="btn" style="background:#6b7686">← Fees</button></a>
+</div>
+<div class="rcpt" dir="ltr">
+  <div class="h"><h2>🏫 {{ school.name }}</h2><div>Fee Receipt</div></div>
+  <div class="b">
+    <div class="row"><span>Receipt No</span><b>{{ inv.receipt_no or '—' }}</b></div>
+    <div class="row"><span>Student</span><b>{{ inv.sname }} ({{ inv.sclass }})</b></div>
+    <div class="row"><span>Father</span><span>{{ inv.father_name or '—' }}</span></div>
+    <div class="row"><span>Month</span><span>{{ inv.month }}</span></div>
+    <div class="row"><span>Items</span><span>{{ inv.items }}</span></div>
+    <div class="row tot"><span>Total</span><span>Rs {{ fmt(inv.total or 0) }}</span></div>
+    {% if inv.discount %}<div class="row"><span>Discount / Concession</span><span>− Rs {{ fmt(inv.discount) }}</span></div>{% endif %}
+    <div class="row"><span>Paid so far</span><span>Rs {{ fmt(inv.paid or 0) }}</span></div>
+    <div class="row tot" style="color:#d94f42"><span>Balance</span><span>Rs {{ fmt((inv.total or 0)-(inv.discount or 0)-(inv.paid or 0)) }}</span></div>
+    <h4>Payments</h4>
+    {% for p in pays %}<div class="row"><span>{{ p.pay_date }} · {{ p.method }}</span><b>Rs {{ fmt(p.amount or 0) }}</b></div>{% endfor %}
+    <div class="sign"><span>__________<br><small>Received by</small></span><span>__________<br><small>Parent sign</small></span></div>
+  </div>
+</div>
+</body></html>

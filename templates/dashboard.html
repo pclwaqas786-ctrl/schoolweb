@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>{{ school.name }} — Dashboard</h2>
+<p class="muted">👤 {{ session.get('user_name','') }} · <b>{{ session.get('role','owner') }}</b> ·
+Apki public website: <a href="{{ url_for('school_home', slug=school.slug) }}"><code>/s/{{ school.slug }}/</code></a></p>
+{% set role = session.get('role','owner') %}
+<nav class="tabs">
+  <a class="on" href="{{ url_for('dashboard') }}">Overview</a>
+  {% if role == 'owner' %}
+  <a href="{{ url_for('applications') }}">Applications ({{ stats.pending }} pending)</a>
+  {% endif %}
+  {% if role in ('owner','teacher') %}
+  <a href="{{ url_for('students') }}">🎒 Students</a>
+  <a href="{{ url_for('attendance') }}">📋 Attendance</a>
+  <a href="{{ url_for('exams') }}">📊 Exams</a>
+  <a href="{{ url_for('diary') }}">📝 Diary</a>
+  {% endif %}
+  {% if role in ('owner','accountant') %}
+  <a href="{{ url_for('fees') }}">💰 Fees</a>
+  <a href="{{ url_for('payroll') }}">💵 Payroll</a>
+  {% endif %}
+  {% if role == 'owner' %}
+  <a href="{{ url_for('staff') }}">👔 Staff</a>
+  <a href="{{ url_for('team') }}">👥 Team</a>
+  <a href="{{ url_for('content') }}">Website Content</a>
+  <a href="{{ url_for('notices') }}">Notices</a>
+  <a href="{{ url_for('settings') }}">Email Settings</a>
+  {% endif %}
+</nav>
+<section class="stat-cards">
+  <div class="stat-card s1 reveal"><div class="n">{{ stats.total }}</div><div class="l">📝 Total applications</div></div>
+  <div class="stat-card s2 reveal"><div class="n">{{ stats.pending }}</div><div class="l">⏳ Pending</div></div>
+  <div class="stat-card s3 reveal"><div class="n">{{ stats.approved }}</div><div class="l">✅ Approved</div></div>
+  <div class="stat-card s4 reveal"><div class="n">{{ stats.notices }}</div><div class="l">📢 Notices</div></div>
+</section>
+<h3>🚀 Modules</h3>
+<section class="stat-cards">
+  {% if role in ('owner','teacher') %}
+  <a class="stat-card s1" style="text-decoration:none" href="{{ url_for('students') }}"><div class="n">🎒</div><div class="l">{{ stats.students }} Students</div></a>
+  <a class="stat-card s3" style="text-decoration:none" href="{{ url_for('attendance') }}"><div class="n">📋</div><div class="l">{{ stats.absent_today }} absent today</div></a>
+  <a class="stat-card s4" style="text-decoration:none" href="{{ url_for('exams') }}"><div class="n">📊</div><div class="l">Exams & Results</div></a>
+  <a class="stat-card s2" style="text-decoration:none" href="{{ url_for('diary') }}"><div class="n">📝</div><div class="l">Diary</div></a>
+  {% endif %}
+  {% if role in ('owner','accountant') %}
+  <a class="stat-card s2" style="text-decoration:none" href="{{ url_for('fees') }}"><div class="n">💰</div><div class="l">Rs {{ stats.fee_due|int }} fee due</div></a>
+  <a class="stat-card s1" style="text-decoration:none" href="{{ url_for('payroll') }}"><div class="n">💵</div><div class="l">Payroll</div></a>
+  {% endif %}
+  {% if role == 'owner' %}
+  <a class="stat-card s3" style="text-decoration:none" href="{{ url_for('staff') }}"><div class="n">👔</div><div class="l">Staff</div></a>
+  <a class="stat-card s4" style="text-decoration:none" href="{{ url_for('team') }}"><div class="n">👥</div><div class="l">Team Logins</div></a>
+  {% endif %}
+</section>
+{% if role == 'owner' %}
+<h3>Recent applications</h3>
+<table>
+<tr><th>ID</th><th>Student</th><th>Class</th><th>Phone</th><th>Status</th></tr>
+{% for a in recent %}
+<tr><td><code dir="ltr">{{ a.app_id or '—' }}</code></td><td>{{ a.student_name }}</td><td>{{ a.class_applying }}</td><td>{{ a.phone }}</td><td><span class="badge {{ a.status }}">{{ a.status }}</span></td></tr>
+{% else %}<tr><td colspan="5" class="muted">Abhi koi application nahi.</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

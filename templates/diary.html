@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Diary — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>📝 Digital Diary / Homework</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+<div class="card">
+<h3>➕ New Diary Entry</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Class *<select name="class">{% for c in classes %}<option>{{ c }}</option>{% endfor %}</select></label>
+  <label>Date<input type="date" name="date" value="{{ day }}"></label>
+  <label>Subject<input name="subject" placeholder="Math"></label>
+  <label style="grid-column:1/-1">Diary Text *<textarea name="text" rows="3" required placeholder="Aaj ka homework / diary..."></textarea></label>
+  <div><button class="btn small teal">📮 Post Diary</button></div>
+</form>
+<p class="muted"><small>Parents apne portal pe roz ki diary dekhte hain — ye roz ka touchpoint hai.</small></p>
+</div>
+<nav class="tabs">
+  <a class="{{ '' if f else 'on' }}" href="{{ url_for('diary') }}">All</a>
+  {% for c in classes %}<a class="{{ 'on' if f==c else '' }}" href="{{ url_for('diary', **{'class': c}) }}">{{ c }}</a>{% endfor %}
+</nav>
+{% for r in rows %}
+<div class="card">
+  <h3>{{ r.subject or 'General' }} <span class="badge approved">{{ r.class }}</span>
+    <small class="muted">{{ r.date }} · {{ r.teacher }}</small></h3>
+  <p>{{ r.text }}</p>
+  <a class="btn small" style="background:#25D366;color:#fff"
+     href="https://wa.me/?text={{ ('📝 Diary (' + r.class + ', ' + r.date + ') — ' + school.name + ': ' + (r.subject or '') + ' — ' + r.text)|urlencode }}"
+     target="_blank">📲 WhatsApp Share</a>
+</div>
+{% else %}<p class="muted">Abhi koi diary entry nahi.</p>{% endfor %}
+{% endblock %}

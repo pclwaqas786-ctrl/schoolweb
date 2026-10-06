@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Staff Attendance — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>📋 Staff Attendance</h2>
+<nav class="tabs"><a href="{{ url_for('staff') }}">← Staff</a></nav>
+<div class="card">
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Date<input type="date" name="date" value="{{ day }}"></label>
+  <div><button class="btn small teal">Show</button></div>
+</form>
+</div>
+{% if staff %}
+<form method="post">
+<input type="hidden" name="date" value="{{ day }}">
+<table>
+<tr><th>#</th><th>Name</th><th>Designation</th><th colspan="3">Status</th></tr>
+{% for st in staff %}
+<tr><td>{{ loop.index }}</td><td><b>{{ st.name }}</b></td><td>{{ st.designation }}</td>
+{% set m = marked.get(st.id, 'present') %}
+<td><label><input type="radio" name="s_{{ st.id }}" value="present" {{ 'checked' if m=='present' }}> ✅</label></td>
+<td><label><input type="radio" name="s_{{ st.id }}" value="absent" {{ 'checked' if m=='absent' }}> ❌</label></td>
+<td><label><input type="radio" name="s_{{ st.id }}" value="leave" {{ 'checked' if m=='leave' }}> 🏖️</label></td>
+</tr>
+{% endfor %}
+</table>
+<button class="btn teal">💾 Save</button>
+</form>
+{% else %}<p class="muted">Pehle staff add karein.</p>{% endif %}
+{% endblock %}

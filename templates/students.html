@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Students — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>🎒 Students ({{ students|length }})</h2>
+<nav class="tabs">
+  <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+  <a class="{{ '' if f else 'on' }}" href="{{ url_for('students') }}">All classes</a>
+  {% for c in classes %}<a class="{{ 'on' if f==c else '' }}" href="{{ url_for('students', **{'class': c}) }}">{{ c }}</a>{% endfor %}
+</nav>
+<p class="muted">Naya student: Applications me <b>Approve</b> kar ke <b>➕ Admit as Student</b> dabayein.<br>
+📱 Har student ka <b>QR code</b> uske parent portal ka link hai — print kar ke ID card pe lagayein ya parent ko WhatsApp karein. Koi app/login nahi chahiye.</p>
+{% for st, purl, tok in students %}
+<div class="card" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+  {% if st.photo %}
+  <img src="{{ url_for('static', filename='uploads/' + st.photo) }}" alt=""
+       style="width:64px;height:64px;object-fit:cover;border-radius:14px;border:3px solid var(--teal);flex:none">
+  {% else %}<div style="font-size:2.4em;flex:none">🧒</div>{% endif %}
+  <div style="flex:1;min-width:200px">
+    <b>{{ st.name }}</b> <span class="badge approved">{{ st.class }}</span><br>
+    <small class="muted">🆔 <code dir="ltr">{{ st.app_id or '—' }}</code> · 👨 {{ st.father_name or '—' }} · 📞 {{ st.phone or '—' }}</small><br>
+    <small><a href="{{ purl }}" target="_blank">🔗 Parent Portal Link</a></small>
+  </div>
+  <div style="text-align:center">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data={{ purl|urlencode }}" alt="QR" width="110" height="110" style="border-radius:10px;border:2px solid #dfe5ee"><br>
+    <small class="muted">Parent QR</small>
+  </div>
+</div>
+{% else %}<p class="muted">Abhi koi admitted student nahi.</p>{% endfor %}
+{% endblock %}

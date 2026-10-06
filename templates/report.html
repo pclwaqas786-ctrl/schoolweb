@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Report Card — {{ st.name }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;700;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Nunito,"Noto Naskh Arabic",sans-serif;background:#f4f6fa;margin:0;padding:24px}
+  .rc{max-width:640px;margin:auto;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px #00394f22}
+  .h{background:linear-gradient(120deg,#8E5BD6,#00394F);color:#fff;padding:20px 26px;text-align:center}
+  .h h1{font-family:Handlee,cursive;margin:0}.h p{margin:4px 0;opacity:.9}
+  .b{padding:22px 26px}
+  .info{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;margin:10px 0}
+  th{background:#00394F;color:#fff;padding:8px}td{padding:8px;border-bottom:1px solid #e8edf3;text-align:center}
+  .sum{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .pill{background:#FFF9F0;border:2px solid #FFC107;border-radius:999px;padding:8px 18px;font-weight:800}
+  .grade{font-size:2em;background:#d4edda;color:#157347;border-radius:16px;padding:6px 22px;font-weight:800}
+  .sign{margin-top:30px;display:flex;justify-content:space-between;text-align:center}
+  .btn{background:#17A2B8;color:#fff;border:0;border-radius:999px;padding:10px 26px;font-weight:800;cursor:pointer;margin:14px 6px}
+  .toolbar{text-align:center}
+  @media print{.toolbar{display:none}body{background:#fff;padding:0}.rc{box-shadow:none}}
+</style></head>
+<body>
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">🖨️ Print Report Card</button>
+  <a href="{{ url_for('exam_merit', eid=exam.id, cls=st.class) }}"><button class="btn" style="background:#6b7686">← Merit</button></a>
+</div>
+<div class="rc" dir="ltr">
+  <div class="h"><h1>🏫 {{ school.name }}</h1><p>📊 Report Card — {{ exam.name }} ({{ exam.year }})<br>رپورٹ کارڈ</p></div>
+  <div class="b">
+    <div class="info">
+      <div><b>Name / نام:</b> {{ st.name }}</div>
+      <div><b>Father / والد:</b> {{ st.father_name or '—' }}</div>
+      <div><b>Class / جماعت:</b> {{ st.class }}</div>
+      <div><b>ID:</b> {{ st.app_id or '—' }}</div>
+    </div>
+    <table>
+      <tr><th>Subject / مضمون</th><th>Obtained / حاصل کردہ</th><th>Total / کل</th></tr>
+      {% for r in rows %}<tr><td style="text-align:start">{{ r.sub }}</td><td>{{ fmt(r.ob) }}</td><td>{{ fmt(r.mx) }}</td></tr>{% endfor %}
+      <tr style="font-weight:800;background:#E3F6F9"><td style="text-align:start">Total / میزان</td><td>{{ fmt(ob) }}</td><td>{{ fmt(mx) }}</td></tr>
+    </table>
+    <div class="sum">
+      <span class="pill">Percentage / فیصد: {{ "%.1f"|format(pct) }}%</span>
+      <span class="pill">Position / پوزیشن: {{ pos }} / {{ total_students }}</span>
+      <span class="grade">{{ grade }}</span>
+    </div>
+    <div class="sign"><span>__________<br><small>Class Teacher</small></span><span>__________<br><small>Principal</small></span></div>
+  </div>
+</div>
+</body></html>

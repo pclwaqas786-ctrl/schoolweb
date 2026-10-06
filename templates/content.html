@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Website Content — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>Website Content</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a></nav>
+<form method="post" class="form">
+  <label>School ka taaruf (About)<textarea name="intro" rows="4">{{ school.intro }}</textarea></label>
+  <label>Principal ka paigham<textarea name="principal_msg" rows="4">{{ school.principal_msg }}</textarea></label>
+  <label>Phone<input name="phone" value="{{ school.phone }}"></label>
+  <label>Address<input name="address" value="{{ school.address }}"></label>
+  <button class="btn" type="submit">Save</button>
+</form>
+{% endblock %}

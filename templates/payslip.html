@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Payslip — {{ r.sname }}</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Nunito,sans-serif;background:#f4f6fa;margin:0;padding:24px}
+  .sl{max-width:520px;margin:auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px #00394f22}
+  .h{background:linear-gradient(120deg,#00394F,#17A2B8);color:#fff;padding:18px 24px}
+  .h h2{margin:0}.b{padding:20px 24px}
+  .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #e3e8f0}
+  .net{font-size:1.4em;font-weight:800;color:#157347}
+  .btn{background:#17A2B8;color:#fff;border:0;border-radius:999px;padding:10px 26px;font-weight:800;cursor:pointer;margin:14px 6px}
+  .toolbar{text-align:center}
+  @media print{.toolbar{display:none}body{background:#fff;padding:0}.sl{box-shadow:none}}
+</style></head>
+<body>
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">🖨️ Print Payslip</button>
+  <a href="{{ url_for('payroll', month=r.month) }}"><button class="btn" style="background:#6b7686">← Payroll</button></a>
+</div>
+<div class="sl" dir="ltr">
+  <div class="h"><h2>🏫 {{ school.name }}</h2><div>Salary Slip — {{ r.month }}</div></div>
+  <div class="b">
+    <div class="row"><span>Staff</span><b>{{ r.sname }} ({{ r.designation }})</b></div>
+    <div class="row"><span>Basic Salary</span><span>Rs {{ fmt(r.basic or 0) }}</span></div>
+    <div class="row"><span>Allowances</span><span>+ Rs {{ fmt(r.allowances or 0) }}</span></div>
+    <div class="row"><span>Deductions</span><span>− Rs {{ fmt(r.deductions or 0) }}</span></div>
+    <div class="row"><span>Advance Adjusted</span><span>− Rs {{ fmt(r.advance or 0) }}</span></div>
+    <div class="row net"><span>Net Payable</span><span>Rs {{ fmt(r.net or 0) }}</span></div>
+    <div class="row"><span>Status</span><b>{{ 'PAID (' + r.pay_date + ')' if r.paid else 'UNPAID' }}</b></div>
+    <div style="margin-top:26px;display:flex;justify-content:space-between">
+      <span>__________<br><small>Received by</small></span><span>__________<br><small>Authorized</small></span>
+    </div>
+  </div>
+</div>
+</body></html>

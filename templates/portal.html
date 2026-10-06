@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ st.name }} — Parent Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--teal:#17A2B8;--navy:#00394F;--coral:#FF6B5E;--amber:#FFC107;--green:#2FBF71;--purple:#8E5BD6}
+  body{font-family:Nunito,sans-serif;background:#FFF9F0;margin:0;padding:0 0 40px}
+  .h{background:linear-gradient(135deg,var(--teal),var(--navy));color:#fff;padding:26px 20px;text-align:center;border-radius:0 0 26px 26px}
+  .h h1{font-family:Handlee,cursive;margin:6px 0}
+  .wrap{max-width:560px;margin:-18px auto 0;padding:0 14px}
+  .card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 6px 18px #00394f14}
+  .card h3{margin:0 0 10px;color:var(--navy)}
+  .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #eee;font-size:.95em}
+  .due{font-size:1.5em;font-weight:800;color:var(--coral)}
+  .ok{color:var(--green);font-weight:800}
+  .badge{padding:3px 12px;border-radius:999px;font-size:.78em;font-weight:800}
+  .paid{background:#d4edda;color:#157347}.unpaid{background:#f8d7da;color:#a02020}.partial{background:#fff3cd;color:#8a6d00}
+  input,select,textarea{width:100%;padding:10px;border:2px solid #dfe5ee;border-radius:12px;font-family:inherit;margin:4px 0}
+  .btn{background:var(--teal);color:#fff;border:0;border-radius:999px;padding:12px 26px;font-weight:800;cursor:pointer;width:100%;font-size:1em}
+  .flash{background:#fff3cd;border-radius:12px;padding:10px;margin:10px 0}
+  .grade{background:#d4edda;color:#157347;border-radius:10px;padding:2px 12px;font-weight:800}
+  small.mut{color:#8a94a6}
+</style></head>
+<body>
+<div class="h">
+  <div style="font-size:2.4em">🏫</div>
+  <h1>{{ school.name }}</h1>
+  <div>Parent Portal</div>
+</div>
+<div class="wrap">
+{% with msgs = get_flashed_messages() %}{% for m in msgs %}<div class="flash">{{ m }}</div>{% endfor %}{% endwith %}
+
+<div class="card">
+  <h3>🧒 {{ st.name }}</h3>
+  <div class="row"><span>Class</span><b>{{ st.class }}</b></div>
+  <div class="row"><span>Student ID</span><b>{{ st.app_id or '—' }}</b></div>
+  <div class="row"><span>Father</span><span>{{ st.father_name or '—' }}</span></div>
+</div>
+
+<div class="card">
+  <h3>💰 Fee — <span class="due">Rs {{ fmt(due) }}</span> <small class="mut">due</small></h3>
+  {% for i in invs %}
+  <div class="row"><span>{{ i.month }}<br><small class="mut">{{ i.items }}</small></span>
+    <span style="text-align:end"><b>Rs {{ fmt((i.total or 0)-(i.discount or 0)-(i.paid or 0)) }}</b><br>
+    <span class="badge {{ i.status }}">{{ i.status }}</span></span></div>
+  {% else %}<p class="mut">Koi invoice nahi.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>📤 Fee Jama Karwayi? Proof Bhejein</h3>
+  <p class="mut"><small>JazzCash / EasyPaisa / Bank se bhejein, phir neeche screenshot upload kar ke bhejein — school verify kar ke raseed dega. Bilkul free.</small></p>
+  <form method="post" enctype="multipart/form-data">
+    <label>Invoice<select name="invoice_id">{% for i in invs %}{% if i.status != 'paid' %}
+      <option value="{{ i.id }}">{{ i.month }} — Rs {{ fmt((i.total or 0)-(i.discount or 0)-(i.paid or 0)) }} due</option>
+    {% endif %}{% endfor %}</select></label>
+    <label>Amount (Rs)<input name="amount" type="number" step="any" min="1" required></label>
+    <label>Method<select name="method"><option value="easypaisa">Easypaisa</option><option value="jazzcash">JazzCash</option><option value="bank">Bank Transfer</option><option value="sadapay">SadaPay</option></select></label>
+    <label>Proof Screenshot<input type="file" name="proof" accept="image/*,.pdf"></label>
+    <label>Note (TID waghera)<input name="note" placeholder="optional"></label>
+    <button class="btn">✅ Proof Bhejein</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3>📋 Attendance (30 din)</h3>
+  {% for a in att %}<div class="row"><span>{{ a.status }}</span><b>{{ a.c }}</b></div>
+  {% else %}<p class="mut">Abhi record nahi.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>📝 Diary</h3>
+  {% for r in diary_rows %}
+  <div class="row"><span><b>{{ r.subject or 'General' }}</b> <small class="mut">{{ r.date }}</small><br>{{ r.text }}</span></div>
+  {% else %}<p class="mut">Abhi koi diary nahi.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>📊 Results</h3>
+  {% for r in results %}
+  <div class="row"><span>{{ r.ex.name }}<br><small class="mut">{{ fmt(r.ob) }}/{{ fmt(r.mx) }} · {{ "%.1f"|format(r.pct) }}%</small></span>
+  <span class="grade">{{ r.grade }}</span></div>
+  {% else %}<p class="mut">Abhi koi result nahi.</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>🧾 Payment History</h3>
+  {% for p in pays %}<div class="row"><span>{{ p.pay_date }} · {{ p.method }}{% if not p.verified %} <small class="mut">(verify pending)</small>{% endif %}</span><b>Rs {{ fmt(p.amount or 0) }}</b></div>
+  {% else %}<p class="mut">Koi payment nahi.</p>{% endfor %}
+</div>
+<p class="mut" style="text-align:center"><small>{{ school.name }} · Powered by SchoolWeb</small></p>
+</div>
+</body></html>
