@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Merit — First Term 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>🏆 First Term 2026 — Merit (Class 4)</h2>
+<nav class="tabs"><a href="exams.html">← Exams</a></nav>
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Class<select name="class" onchange="this.form.submit()"><option >Class 3</option><option selected>Class 4</option><option >Class 5</option></select></label>
+</form>
+<table>
+<tr><th>Pos</th><th>Student</th><th>Obtained</th><th>Total</th><th>%</th><th>Grade</th><th></th></tr>
+
+<tr><td>🥇</td>
+<td><b>Fatima Khan</b></td><td>365</td><td>400</td>
+<td>91.2%</td><td><span class="badge approved">A+</span></td>
+<td><a class="btn small teal" href="report.html">🖨️ Report Card</a></td></tr>
+
+<tr><td>🥈</td>
+<td><b>Ahmed Raza</b></td><td>341</td><td>400</td>
+<td>85.2%</td><td><span class="badge approved">A</span></td>
+<td><a class="btn small teal" href="report.html">🖨️ Report Card</a></td></tr>
+
+<tr><td>🥉</td>
+<td><b>Bilal Ahmed</b></td><td>275</td><td>400</td>
+<td>68.8%</td><td><span class="badge approved">C</span></td>
+<td><a class="btn small teal" href="report.html">🖨️ Report Card</a></td></tr>
+
+</table>
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

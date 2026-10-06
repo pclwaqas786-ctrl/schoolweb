@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fees — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>💰 Fee Management</h2>
+<nav class="tabs">
+  <a href="dashboard.html">← Dashboard</a>
+  <a href="fees.html">⚠️ Defaulters</a>
+</nav>
+
+<section class="stat-cards">
+  <div class="stat-card s1"><div class="n">Rs 10800</div><div class="l">Total (2026-10)</div></div>
+  <div class="stat-card s2"><div class="n">Rs 0</div><div class="l">Collected</div></div>
+  <div class="stat-card s4"><div class="n">Rs 0</div><div class="l">Discounts</div></div>
+  <div class="stat-card s3"><div class="n">Rs 10800</div><div class="l">Due</div></div>
+</section>
+
+
+
+<h3>🧾 Fee Heads</h3>
+
+<div class="card">
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Name *<input name="name" required placeholder="Tuition Fee"></label>
+  <label>Amount (Rs) *<input name="amount" type="number" step="any" min="0" required placeholder="1500"></label>
+  <label>Classes <small class="muted">(all, ya comma se: Class 1,Class 2)</small><input name="classes" value="all"></label>
+  <label>Frequency<select name="freq"><option value="monthly">Monthly</option><option value="once">One-time</option></select></label>
+  <div><button class="btn small teal">➕ Add Head</button></div>
+</form>
+</div>
+
+<table>
+<tr><th>Head</th><th>Amount</th><th>Classes</th><th>Freq</th><th></th></tr>
+
+<tr><td>Tuition Fee</td><td>Rs 1500</td><td>all</td><td>monthly</td>
+<td><form method="post" class="inline"><input type="hidden" name="del_head" value="1">
+<button class="btn small danger" onclick="return confirm('Delete?')">✕</button></form></td></tr>
+
+<tr><td>Exam Fee</td><td>Rs 300</td><td>all</td><td>monthly</td>
+<td><form method="post" class="inline"><input type="hidden" name="del_head" value="2">
+<button class="btn small danger" onclick="return confirm('Delete?')">✕</button></form></td></tr>
+
+</table>
+
+<h3>📅 Monthly Invoices</h3>
+<div class="card">
+<form method="post" action="fees.html" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="2026-10" required></label>
+  <div><button class="btn teal">⚙️ Generate Invoices</button></div>
+</form>
+<p class="muted"><small>Pichle months ka baqaya <b>arrears</b> ke tor pe auto-add ho jata hai. Pehle se bani invoice dobara nahi banegi.</small></p>
+</div>
+
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end">
+  <label>Month<input type="month" name="month" value="2026-10"></label>
+  <div><button class="btn small">Show</button></div>
+</form>
+<div style="overflow-x:auto"><table>
+<tr><th>Student</th><th>Class</th><th>Items</th><th>Total</th><th>Discount</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr>
+
+<tr><td>Zainab Ali</td><td>Class 3</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+<tr><td>Ahmed Raza</td><td>Class 4</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+<tr><td>Bilal Ahmed</td><td>Class 4</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+<tr><td>Fatima Khan</td><td>Class 4</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+<tr><td>Ayesha Malik</td><td>Class 5</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+<tr><td>Usman Tariq</td><td>Class 5</td><td><small>Tuition Fee 1500, Exam Fee 300</small></td>
+<td>Rs 1800</td><td>—</td>
+<td>Rs 0</td>
+<td><b>Rs 1800</b></td>
+<td><span class="badge unpaid">unpaid</span></td>
+<td style="white-space:nowrap"><a class="btn small teal" href="fees.html">💵 Collect</a>
+<a class="btn small" href="challan.html">🧾 Challan</a></td></tr>
+
+</table></div>
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

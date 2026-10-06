@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student ID Card — New Apply One</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+<style>
+  .cardpage{max-width:620px;margin:26px auto;text-align:center}
+  .idcard{width:540px;max-width:94vw;margin:18px auto;background:#fff;border-radius:18px;overflow:hidden;
+    box-shadow:0 16px 40px #00394f30;text-align:start}
+  .idcard .head{background:linear-gradient(120deg,#17A2B8,#00394F);color:#fff;padding:16px 20px;
+    display:flex;align-items:center;gap:12px}
+  .idcard .head .logo{font-size:2em}
+  .idcard .head h2{color:#fff;margin:0;font-size:1.3em;line-height:1.3}
+  .idcard .head small{opacity:.85;font-family:"Nunito","Noto Naskh Arabic",sans-serif;font-weight:700}
+  .idcard .body{display:flex;gap:18px;padding:20px}
+  .idcard .photo{width:130px;height:150px;flex:none;border-radius:12px;object-fit:cover;
+    border:4px solid #FFC107;background:#E3F6F9;display:flex;align-items:center;justify-content:center;
+    font-size:3em;overflow:hidden}
+  .idcard .photo img{width:100%;height:100%;object-fit:cover}
+  .idcard .rows{flex:1;font-size:.95em}
+  .idcard .rows .r{display:flex;gap:8px;padding:3px 0}
+  .idcard .rows .k{min-width:92px;font-weight:800;color:#00394F}
+  .idcard .idno{font-family:"Handlee",cursive;font-size:1.5em;color:#d94f42;font-weight:bold;letter-spacing:1px}
+  .idcard .foot{background:#FFF9F0;border-top:3px dashed #FFC107;padding:10px 20px;font-size:.82em;
+    color:#6b7686;display:flex;justify-content:space-between;gap:10px}
+  .toolbar{display:flex;gap:12px;justify-content:center;margin:18px 0}
+  @media print{
+    .toolbar,.noprint{display:none!important}
+    body{background:#fff}
+    .cardpage{margin:0;max-width:none}
+    .idcard{box-shadow:none;margin:0 auto}
+  }
+</style>
+</head>
+<body>
+<div class="cardpage">
+  <div class="toolbar">
+    <button class="btn teal" onclick="window.print()">🖨️ Print Card</button>
+    <a class="btn ghost" style="color:#00394F!important;border-color:#00394F" href="applications.html">Back to Dashboard</a>
+  </div>
+
+  <div class="idcard" dir="ltr">
+    <div class="head">
+      <div class="logo">🏫</div>
+      <div><h2>Demo Public School</h2><small>🎒 Student ID Card</small></div>
+    </div>
+    <div class="body">
+      <div class="photo">
+        🧒
+      </div>
+      <div class="rows">
+        <div class="r"><span class="k">Name:</span><b>New Apply One</b></div>
+        <div class="r"><span class="k">Father:</span>Father One</div>
+        <div class="r"><span class="k">Class:</span>Class 2</div>
+        <div class="r"><span class="k">DOB:</span>—</div>
+        <div class="r"><span class="k">Phone:</span>03001234560</div>
+        <div class="r"><span class="k">ID No:</span><span class="idno">DPS-2026-0001</span></div>
+      </div>
+    </div>
+    <div class="foot">
+      
+      <span>📅 Session: 2026-27</span>
+      <span>📍 Gulshan-e-Iqbal, Karachi</span>
+    </div>
+  </div>
+  <p class="muted noprint" style="font-size:.85em">💡 Print pe "Background graphics" on rakhein taake colors ayen.</p>
+</div>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

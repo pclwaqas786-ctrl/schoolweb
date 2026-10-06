@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attendance — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>📋 Attendance</h2>
+<nav class="tabs"><a href="dashboard.html">← Dashboard</a></nav>
+
+<section class="stat-cards">
+  <div class="stat-card s1"><div class="n">1</div><div class="l">✅ Present</div></div>
+  <div class="stat-card s2"><div class="n">1</div><div class="l">❌ Absent</div></div>
+  <div class="stat-card s3"><div class="n">1</div><div class="l">⏰ Late</div></div>
+  <div class="stat-card s4"><div class="n">0</div><div class="l">🏖️ Leave</div></div>
+</section>
+
+<div class="card">
+<form method="get" class="form" style="display:flex;gap:10px;align-items:end;flex-wrap:wrap">
+  <label>Class<select name="class"><option >Class 3</option><option selected>Class 4</option><option >Class 5</option></select></label>
+  <label>Date<input type="date" name="date" value="2026-10-07"></label>
+  <div><button class="btn small teal">Show</button></div>
+</form>
+</div>
+
+<form method="post">
+<input type="hidden" name="class" value="Class 4">
+<input type="hidden" name="date" value="2026-10-07">
+<table>
+<tr><th>#</th><th>Student</th><th>Father</th><th colspan="4">Status</th></tr>
+
+<tr><td>1</td><td><b>Ahmed Raza</b></td><td>Rashid Raza</td>
+
+<td><label><input type="radio" name="st_1" value="present" checked> ✅</label></td>
+<td><label><input type="radio" name="st_1" value="absent" > ❌</label></td>
+<td><label><input type="radio" name="st_1" value="late" > ⏰</label></td>
+<td><label><input type="radio" name="st_1" value="leave" > 🏖️</label></td>
+</tr>
+
+<tr><td>2</td><td><b>Bilal Ahmed</b></td><td>Naseer Ahmed</td>
+
+<td><label><input type="radio" name="st_3" value="present" > ✅</label></td>
+<td><label><input type="radio" name="st_3" value="absent" > ❌</label></td>
+<td><label><input type="radio" name="st_3" value="late" checked> ⏰</label></td>
+<td><label><input type="radio" name="st_3" value="leave" > 🏖️</label></td>
+</tr>
+
+<tr><td>3</td><td><b>Fatima Khan</b></td><td>Imran Khan</td>
+
+<td><label><input type="radio" name="st_2" value="present" > ✅</label></td>
+<td><label><input type="radio" name="st_2" value="absent" checked> ❌</label></td>
+<td><label><input type="radio" name="st_2" value="late" > ⏰</label></td>
+<td><label><input type="radio" name="st_2" value="leave" > 🏖️</label></td>
+</tr>
+
+</table>
+<button class="btn teal">💾 Save Attendance</button>
+</form>
+
+
+
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

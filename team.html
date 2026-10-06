@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>👥 Team Logins</h2>
+<nav class="tabs"><a href="dashboard.html">← Dashboard</a></nav>
+<p class="muted">Teacher sirf <b>Attendance, Diary, Exams</b> dekh sakta hai · Accountant sirf <b>Fees, Payroll</b> · Owner sab kuch.</p>
+<div class="card">
+<h3>➕ New Login</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Name *<input name="name" required placeholder="Ahmed Khan"></label>
+  <label>Email (login) *<input name="email" type="email" required placeholder="ahmed@school.com" dir="ltr" style="text-align:start"></label>
+  <label>Password *<input name="password" type="password" required minlength="4" placeholder="min 4 harf"></label>
+  <label>Role<select name="role"><option value="teacher">👩‍🏫 Teacher</option><option value="accountant">🧾 Accountant</option></select></label>
+  <div><button class="btn small teal">Create Login</button></div>
+</form>
+</div>
+<table>
+<tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
+
+<tr><td>Sir Kashif</td><td>teacher@demo.com</td>
+<td><span class="badge approved">teacher</span></td>
+<td><form method="post" class="inline"><input type="hidden" name="del" value="1">
+<button class="btn small danger" onclick="return confirm('Delete login?')">✕</button></form></td></tr>
+
+</table>
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

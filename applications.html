@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>Admission Applications</h2>
+<nav class="tabs">
+  <a href="dashboard.html">← Dashboard</a>
+  <a class="on" href="applications.html">All</a>
+  <a class="" href="applications.html">Pending</a>
+  <a class="" href="applications.html">Approved</a>
+  <a class="" href="applications.html">Rejected</a>
+</nav>
+
+<div class="card">
+  <h3>Old Student <span class="badge approved">approved</span></h3>
+  <p><b>🆔 Application ID:</b> <code dir="ltr">DPS-2026-0003</code></p>
+  
+  <p><b>Father:</b> Father Three · <b>DOB:</b>  · <b>Gender:</b> </p>
+  <p><b>Class:</b> Class 4 · <b>Prev school:</b> </p>
+  <p><b>Phone:</b> 03001234562 · <b>Address:</b> </p>
+  <form method="post" class="inline">
+    <input type="hidden" name="id" value="3">
+    <button name="status" value="approved" class="btn small">Approve</button>
+    <button name="status" value="rejected" class="btn small danger">Reject</button>
+    <button name="status" value="pending" class="btn small ghost">Pending</button>
+  </form>
+  <a class="btn small teal" href="idcard.html">🪪 ID Card</a>
+  
+  <form method="post" action="students.html" class="inline">
+    <button class="btn small" style="background:var(--green);color:#fff">➕ Admit as Student</button>
+  </form>
+  
+</div>
+
+<div class="card">
+  <h3>New Apply Two <span class="badge pending">pending</span></h3>
+  <p><b>🆔 Application ID:</b> <code dir="ltr">DPS-2026-0002</code></p>
+  
+  <p><b>Father:</b> Father Two · <b>DOB:</b>  · <b>Gender:</b> </p>
+  <p><b>Class:</b> Class 3 · <b>Prev school:</b> </p>
+  <p><b>Phone:</b> 03001234561 · <b>Address:</b> </p>
+  <form method="post" class="inline">
+    <input type="hidden" name="id" value="2">
+    <button name="status" value="approved" class="btn small">Approve</button>
+    <button name="status" value="rejected" class="btn small danger">Reject</button>
+    <button name="status" value="pending" class="btn small ghost">Pending</button>
+  </form>
+  <a class="btn small teal" href="idcard.html">🪪 ID Card</a>
+  
+</div>
+
+<div class="card">
+  <h3>New Apply One <span class="badge pending">pending</span></h3>
+  <p><b>🆔 Application ID:</b> <code dir="ltr">DPS-2026-0001</code></p>
+  
+  <p><b>Father:</b> Father One · <b>DOB:</b>  · <b>Gender:</b> </p>
+  <p><b>Class:</b> Class 2 · <b>Prev school:</b> </p>
+  <p><b>Phone:</b> 03001234560 · <b>Address:</b> </p>
+  <form method="post" class="inline">
+    <input type="hidden" name="id" value="1">
+    <button name="status" value="approved" class="btn small">Approve</button>
+    <button name="status" value="rejected" class="btn small danger">Reject</button>
+    <button name="status" value="pending" class="btn small ghost">Pending</button>
+  </form>
+  <a class="btn small teal" href="idcard.html">🪪 ID Card</a>
+  
+</div>
+
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

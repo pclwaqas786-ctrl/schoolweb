@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>Demo Public School — Dashboard</h2>
+<p class="muted">👤 Owner · <b>owner</b> ·
+Apki public website: <a href="school.html"><code>/s/demo-school/</code></a></p>
+
+<nav class="tabs">
+  <a class="on" href="dashboard.html">Overview</a>
+  
+  <a href="applications.html">Applications (2 pending)</a>
+  
+  
+  <a href="students.html">🎒 Students</a>
+  <a href="attendance.html">📋 Attendance</a>
+  <a href="exams.html">📊 Exams</a>
+  <a href="diary.html">📝 Diary</a>
+  
+  
+  <a href="fees.html">💰 Fees</a>
+  <a href="payroll.html">💵 Payroll</a>
+  
+  
+  <a href="staff.html">👔 Staff</a>
+  <a href="team.html">👥 Team</a>
+  <a href="content.html">Website Content</a>
+  <a href="notices.html">Notices</a>
+  <a href="dashboard.html">Email Settings</a>
+  
+</nav>
+<section class="stat-cards">
+  <div class="stat-card s1 reveal"><div class="n">3</div><div class="l">📝 Total applications</div></div>
+  <div class="stat-card s2 reveal"><div class="n">2</div><div class="l">⏳ Pending</div></div>
+  <div class="stat-card s3 reveal"><div class="n">1</div><div class="l">✅ Approved</div></div>
+  <div class="stat-card s4 reveal"><div class="n">2</div><div class="l">📢 Notices</div></div>
+</section>
+<h3>🚀 Modules</h3>
+<section class="stat-cards">
+  
+  <a class="stat-card s1" style="text-decoration:none" href="students.html"><div class="n">🎒</div><div class="l">6 Students</div></a>
+  <a class="stat-card s3" style="text-decoration:none" href="attendance.html"><div class="n">📋</div><div class="l">1 absent today</div></a>
+  <a class="stat-card s4" style="text-decoration:none" href="exams.html"><div class="n">📊</div><div class="l">Exams & Results</div></a>
+  <a class="stat-card s2" style="text-decoration:none" href="diary.html"><div class="n">📝</div><div class="l">Diary</div></a>
+  
+  
+  <a class="stat-card s2" style="text-decoration:none" href="fees.html"><div class="n">💰</div><div class="l">Rs 10800 fee due</div></a>
+  <a class="stat-card s1" style="text-decoration:none" href="payroll.html"><div class="n">💵</div><div class="l">Payroll</div></a>
+  
+  
+  <a class="stat-card s3" style="text-decoration:none" href="staff.html"><div class="n">👔</div><div class="l">Staff</div></a>
+  <a class="stat-card s4" style="text-decoration:none" href="team.html"><div class="n">👥</div><div class="l">Team Logins</div></a>
+  
+</section>
+
+<h3>Recent applications</h3>
+<table>
+<tr><th>ID</th><th>Student</th><th>Class</th><th>Phone</th><th>Status</th></tr>
+
+<tr><td><code dir="ltr">DPS-2026-0003</code></td><td>Old Student</td><td>Class 4</td><td>03001234562</td><td><span class="badge approved">approved</span></td></tr>
+
+<tr><td><code dir="ltr">DPS-2026-0002</code></td><td>New Apply Two</td><td>Class 3</td><td>03001234561</td><td><span class="badge pending">pending</span></td></tr>
+
+<tr><td><code dir="ltr">DPS-2026-0001</code></td><td>New Apply One</td><td>Class 2</td><td>03001234560</td><td><span class="badge pending">pending</span></td></tr>
+
+</table>
+
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

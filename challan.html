@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Fee Challan — Ahmed Raza</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  body{font-family:Nunito,sans-serif;background:#f4f6fa;margin:0;padding:24px}
+  .ch{max-width:600px;margin:auto;background:#fff;border:3px solid #00394F;border-radius:6px;overflow:hidden}
+  .h{background:#00394F;color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+  .h h2{margin:0}.b{padding:18px 22px}
+  table{width:100%;border-collapse:collapse;margin:10px 0}
+  td{padding:7px 4px;border-bottom:1px solid #e3e8f0}
+  .tot{font-weight:800;font-size:1.15em}
+  .due{color:#d94f42;font-size:1.35em;font-weight:800}
+  .copies{display:flex;gap:8px;margin-top:14px}
+  .copy{flex:1;border:2px dashed #8a94a6;border-radius:8px;text-align:center;padding:6px;font-size:.8em;font-weight:800;color:#8a94a6}
+  .btn{background:#17A2B8;color:#fff;border:0;border-radius:999px;padding:10px 26px;font-weight:800;cursor:pointer;margin:14px 6px}
+  .toolbar{text-align:center}
+  @media print{.toolbar{display:none}body{background:#fff;padding:0}}
+</style></head>
+<body>
+<div class="toolbar">
+  <button class="btn" onclick="window.print()">🖨️ Print Challan</button>
+  <a href="fees.html"><button class="btn" style="background:#6b7686">← Fees</button></a>
+</div>
+<div class="ch" dir="ltr">
+  <div class="h"><div><h2>🏫 Demo Public School</h2><div>FEE CHALLAN — 2026-10</div></div>
+  <div style="text-align:end"><div>Challan No</div><b>CH-7</b></div></div>
+  <div class="b">
+    <table>
+      <tr><td><b>Student</b></td><td>Ahmed Raza (Class 4)</td><td><b>ID</b></td><td>DPS-2026-0101</td></tr>
+      <tr><td><b>Father</b></td><td colspan="3">Rashid Raza</td></tr>
+    </table>
+    <table>
+      <tr style="background:#f0f4f8;font-weight:800"><td>Particulars</td><td style="text-align:end">Amount</td></tr>
+      <tr><td>Tuition Fee 1500, Exam Fee 300</td><td style="text-align:end">Rs 1800</td></tr>
+      
+      <tr><td>Paid so far</td><td style="text-align:end">− Rs 0</td></tr>
+      <tr class="tot"><td>Payable Now</td><td style="text-align:end" class="due">Rs 1800</td></tr>
+    </table>
+    <p><small>Due date: 10th of month · JazzCash / EasyPaisa / Bank se jama karwa ke screenshot parent portal pe upload karein.</small></p>
+    <div class="copies"><div class="copy">BANK COPY</div><div class="copy">SCHOOL COPY</div><div class="copy">PARENT COPY</div></div>
+    <div style="margin-top:20px;display:flex;justify-content:space-between">
+      <span>__________<br><small>Received by</small></span><span>__________<br><small>Seal & Sign</small></span>
+    </div>
+  </div>
+</div>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body></html>

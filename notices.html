@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notices — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>Notices</h2>
+<nav class="tabs"><a href="dashboard.html">← Dashboard</a></nav>
+<form method="post" class="form">
+  <label>Title<input name="title" required></label>
+  <label>Detail<textarea name="body" rows="3"></textarea></label>
+  <button class="btn" type="submit">Add Notice</button>
+</form>
+
+<div class="card"><h3>📝 First Term Exams</h3><p>First Term exams 15 October se shuru honge. Date sheet jald.</p>
+<form method="post" class="inline"><button name="delete" value="2" class="btn small danger">Delete</button></form></div>
+
+<div class="card"><h3>📢 Admissions Open 2026-27</h3><p>Naye session ke dakhle jari hain. Online form bharein!</p>
+<form method="post" class="inline"><button name="delete" value="1" class="btn small danger">Delete</button></form></div>
+
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Online Admission — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="school.html">🏫 Demo Public School</a>
+  <span class="sp"></span>
+  
+    <a class="btn small ghost" href="apply.html">اردو</a>
+  
+</nav>
+
+<main class="wrap">
+  
+    
+  
+
+  
+    <div style="text-align:center;margin-top:26px">
+      <span class="kicker">📝 Online Admission</span>
+      <h1 style="margin:.3em 0">Demo Public School</h1>
+      <p class="muted">Fill the admission form below.</p>
+    </div>
+    <div class="form-card">
+      <form method="post" class="form" enctype="multipart/form-data">
+        <div class="form-2col">
+          <label>Student Name *<input name="student_name" required placeholder="🧒"></label>
+          <label>Father Name<input name="father_name" placeholder="👨"></label>
+        </div>
+        <div class="form-2col">
+          <label>Date of Birth<input type="date" name="dob"></label>
+          <label>Gender<select name="gender">
+            <option value=""></option><option>Male</option><option>Female</option>
+          </select></label>
+        </div>
+        <div class="form-2col">
+          <label>Class Applying For *<input name="class_applying" required placeholder="🎒"></label>
+          <label>Previous School<input name="prev_school" placeholder="🏫"></label>
+        </div>
+        <label>Photo<input type="file" name="photo" accept="image/*" id="photoInp">
+        <small>📷 JPG / PNG / WebP — max 4MB</small></label>
+        <div style="text-align:center;margin-top:-6px">
+          <img id="photoPrev" alt="" style="display:none;max-width:140px;border-radius:1rem;border:3px solid var(--teal)">
+        </div>
+        <script>
+        document.getElementById('photoInp').addEventListener('change', function(e){
+          var f = e.target.files[0]; if(!f) return;
+          var r = new FileReader();
+          r.onload = function(ev){ var i = document.getElementById('photoPrev');
+            i.src = ev.target.result; i.style.display = 'inline-block'; };
+          r.readAsDataURL(f);
+        });
+        </script>
+        <label>Phone *<input name="phone" required placeholder="📞 03xx-xxxxxxx" dir="ltr" style="text-align:start"></label>
+        <label>Address<textarea name="address" rows="2" placeholder="📍"></textarea></label>
+        <div style="text-align:center;margin-top:20px">
+          <button class="btn big" type="submit">🚀 Submit Application</button>
+        </div>
+      </form>
+    </div>
+    <p style="text-align:center"><a href="school.html">← Home</a></p>
+  
+</main>
+<footer class="plain"><p>Demo Public School · powered by 🏫 SchoolWeb</p></footer>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>

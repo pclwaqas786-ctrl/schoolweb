@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff — Demo Public School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<nav class="topbar">
+  <a class="brand" href="index.html">🏫 School<span class="dot">Web</span></a>
+  <span class="sp"></span>
+  
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="index.html">Logout</a>
+  
+</nav>
+
+  
+
+
+<h2>👔 Staff (2)</h2>
+<nav class="tabs">
+  <a href="dashboard.html">← Dashboard</a>
+  <a href="staff.html">📋 Staff Attendance</a>
+  <a href="payroll.html">💵 Payroll</a>
+</nav>
+<div class="card">
+<h3>➕ New Staff</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Name *<input name="name" required></label>
+  <label>Father Name<input name="father_name"></label>
+  <label>Designation<select name="designation"><option>Teacher</option><option>Principal</option><option>Accountant</option><option>Driver</option><option>Peon</option><option>Guard</option><option>Librarian</option><option>Other</option></select></label>
+  <label>Monthly Salary (Rs)<input name="salary" type="number" step="any" min="0" value="0"></label>
+  <label>Phone<input name="phone"></label>
+  <label>Join Date<input name="join_date" type="date"></label>
+  <label style="grid-column:1/-1">Address<input name="address"></label>
+  <div><button class="btn small teal">Add Staff</button></div>
+</form>
+</div>
+<table>
+<tr><th>Name</th><th>Designation</th><th>Phone</th><th>Salary</th><th></th></tr>
+
+<tr><td><b>Rafiq Peon</b><br><small class="muted"></small></td>
+<td>Peon</td><td>03008888888</td><td>Rs 25000</td>
+<td><form method="post" class="inline"><input type="hidden" name="del" value="2">
+<button class="btn small danger" onclick="return confirm('Remove?')">✕</button></form></td></tr>
+
+<tr><td><b>Sir Kashif</b><br><small class="muted"></small></td>
+<td>Teacher</td><td>03007777777</td><td>Rs 40000</td>
+<td><form method="post" class="inline"><input type="hidden" name="del" value="1">
+<button class="btn small danger" onclick="return confirm('Remove?')">✕</button></form></td></tr>
+
+</table>
+
+<footer class="plain"><p>🏫 SchoolWeb — har school ki apni website. 100% free, hamesha.</p></footer>
+<script src="static/site.js"></script>
+<div style="position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#00394F;color:#fff;padding:10px 22px;border-radius:999px;z-index:99999;font-family:sans-serif;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.3);white-space:nowrap">👀 Live Demo Preview · <a style="color:#FFC107" href="https://github.com/pclwaqas786-ctrl/schoolweb">GitHub pe code</a></div>
+<script>document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault();alert('Ye demo preview hai — yahan save nahi hota 🙂');});});</script>
+</body>
+</html>
