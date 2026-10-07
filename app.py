@@ -139,6 +139,10 @@ def init_db():
     CREATE TABLE IF NOT EXISTS parent_tokens(
         student_id INTEGER PRIMARY KEY, token TEXT NOT NULL UNIQUE,
         created_at TEXT DEFAULT '');
+    CREATE TABLE IF NOT EXISTS report_comments(
+        id INTEGER PRIMARY KEY, exam_id INTEGER NOT NULL, student_id INTEGER NOT NULL,
+        comment TEXT DEFAULT '', created_at TEXT DEFAULT '',
+        UNIQUE(exam_id, student_id));
     """)
     # migration: purani DB me naye columns add karo + khali IDs backfill
     cols = [r[1] for r in d.execute("PRAGMA table_info(applications)")]
@@ -891,9 +895,75 @@ def report_card(eid, sid):
         scores.append(rr["t"] or 0)
     scores.sort(reverse=True)
     pos = scores.index(ob) + 1 if ob in scores else "-"
+    cm = db().execute("SELECT comment FROM report_comments WHERE exam_id=? AND student_id=?",
+                      (eid, sid)).fetchone()
     return render_template("report.html", school=s, exam=ex, st=st, rows=rows,
                            ob=ob, mx=mx, pct=pct, grade=grade_of(pct), pos=pos,
-                           total_students=len(mates), fmt=fmt)
+                           total_students=len(mates), fmt=fmt,
+                           ai_comment=cm["comment"] if cm else "")
+
+# ---------- AI Report Card Comments (Phase 3) ----------
+AI_COMMENT_SYSTEM = (
+    "You are a caring school teacher writing report-card comments for Pakistani parents. "
+    "Write 2-3 sentences per student in BOTH English and Urdu script (اردو). "
+    "Be specific: name the strongest and weakest subjects from the data. "
+    "Be encouraging but honest. Never invent marks or subjects not given."
+)
+
+def _student_marks_summary(d, eid, sid):
+    rows = d.execute("SELECT subject, obtained, total FROM marks WHERE exam_id=? AND student_id=?",
+                     (eid, sid)).fetchall()
+    if not rows:
+        return None
+    parts = [f"{r['subject']}: {fmt(r['obtained'])}/{fmt(r['total'])}" for r in rows]
+    ob = sum(r["obtained"] or 0 for r in rows)
+    mx = sum(r["total"] or 0 for r in rows)
+    pct = (ob / mx * 100) if mx else 0
+    return {"parts": parts, "ob": ob, "mx": mx, "pct": pct, "grade": grade_of(pct)}
+
+@app.route("/dashboard/exams/<int:eid>/ai-comments", methods=["GET", "POST"])
+@login_required
+@require_role("owner", "teacher")
+def ai_comments(eid):
+    s = current_school(); d = db()
+    ex = d.execute("SELECT * FROM exams WHERE id=? AND school_id=?", (eid, s["id"])).fetchone()
+    if not ex:
+        return "Exam nahi mila.", 404
+    classes = student_classes(s["id"])
+    cls = request.values.get("class", classes[0] if classes else "")
+    studs = d.execute("SELECT * FROM students WHERE school_id=? AND class=? AND status='active' ORDER BY name",
+                      (s["id"], cls)).fetchall() if cls else []
+    if request.method == "POST":
+        made = 0
+        for st in studs:
+            summ = _student_marks_summary(d, eid, st["id"])
+            if not summ:
+                continue
+            prompt = (f"Student: {st['name']} (Class {st['class']})\n"
+                      f"Exam: {ex['name']}\nMarks: {', '.join(summ['parts'])}\n"
+                      f"Total: {fmt(summ['ob'])}/{fmt(summ['mx'])} = {summ['pct']:.1f}% (Grade {summ['grade']})\n\n"
+                      f"Write a warm, specific report-card comment in English AND Urdu (اردو).")
+            try:
+                comment, _prov = ask_ai(prompt, system=AI_COMMENT_SYSTEM, max_tokens=400)
+            except RuntimeError as e:
+                flash(f"⛔ AI error ({st['name']}): {e}")
+                continue
+            d.execute("""INSERT INTO report_comments(exam_id,student_id,comment,created_at)
+                         VALUES(?,?,?,?)
+                         ON CONFLICT(exam_id,student_id) DO UPDATE SET comment=excluded.comment""",
+                      (eid, st["id"], comment, datetime.now().isoformat()))
+            made += 1
+        d.commit()
+        flash(f"✅ {made} students ke AI comments ban gaye.")
+        return redirect(url_for("ai_comments", eid=eid, **{"class": cls}))
+    saved = {r["student_id"]: r["comment"] for r in d.execute(
+        "SELECT student_id, comment FROM report_comments WHERE exam_id=?", (eid,))}
+    rows = []
+    for st in studs:
+        rows.append({"st": st, "summ": _student_marks_summary(d, eid, st["id"]),
+                     "comment": saved.get(st["id"], "")})
+    return render_template("ai_comments.html", school=s, exam=ex, classes=classes,
+                           cls=cls, rows=rows)
 
 # ---------- Team (role-based logins) ----------
 @app.route("/dashboard/team", methods=["GET", "POST"])
@@ -1049,6 +1119,67 @@ def payslip(pid):
         return "Slip nahi mili.", 404
     return render_template("payslip.html", school=s, r=r, fmt=fmt)
 
+# ---------- AI features (ai_engine) ----------
+from ai_engine import ask_ai, provider_status
+
+AI_DIARY_SYSTEM = (
+    "You are a diary/notice writer for Pakistani schools. "
+    "Always produce the entry in BOTH languages: first a polished English version, "
+    "then the same content in proper Urdu script (اردو). "
+    "Tone: warm, clear, school-official. Keep it short (under 120 words per language). "
+    "Never invent dates, fees amounts, or names not given in the input."
+)
+
+@app.route("/dashboard/ai/diary", methods=["GET", "POST"])
+@login_required
+@require_role("owner", "teacher")
+def ai_diary():
+    """AI Diary/Notice Writer: rough points -> bilingual polished entry."""
+    s = current_school(); d = db()
+    classes = student_classes(s["id"])
+    day = datetime.now().date().isoformat()
+    if request.method == "POST":
+        action = request.form.get("action")
+        if action == "save":
+            cls = request.form.get("class", "").strip()
+            text = request.form.get("final_text", "").strip()
+            if cls and text:
+                d.execute("""INSERT INTO diary(school_id,class,date,subject,text,teacher,created_at)
+                             VALUES(?,?,?,?,?,?,?)""",
+                          (s["id"], cls, request.form.get("date") or day,
+                           request.form.get("subject", ""), text,
+                           (current_user_name() or current_role()) + " (AI)",
+                           datetime.now().isoformat()))
+                d.commit()
+                flash("✅ AI diary entry post ho gayi.")
+                return redirect(url_for("diary"))
+            flash("Class aur text zaroori hai.")
+            return redirect(url_for("ai_diary"))
+        # action == generate
+        points = request.form.get("points", "").strip()
+        kind = request.form.get("kind", "diary")
+        cls = request.form.get("class", "").strip()
+        subject = request.form.get("subject", "").strip()
+        date = request.form.get("date", "").strip() or day
+        if not points:
+            flash("Rough points likhein pehle.")
+            return redirect(url_for("ai_diary"))
+        prompt = (
+            f"School: {s['name']}\nType: {kind}\nClass: {cls}\n"
+            f"Subject: {subject or 'General'}\nDate: {date}\n"
+            f"Teacher's rough points: {points}\n\n"
+            f"Write a polished {kind} entry in English AND Urdu (اردو script)."
+        )
+        try:
+            result, provider = ask_ai(prompt, system=AI_DIARY_SYSTEM, max_tokens=600)
+        except RuntimeError as e:
+            flash(f"⛔ AI error: {e}")
+            return redirect(url_for("ai_diary"))
+        return render_template("ai_diary.html", school=s, classes=classes, day=day,
+                               result=result, provider=provider,
+                               cls=cls, date=date, subject=subject)
+    return render_template("ai_diary.html", school=s, classes=classes, day=day)
+
 # ---------- Digital diary / homework ----------
 @app.route("/dashboard/diary", methods=["GET", "POST"])
 @login_required
@@ -1149,6 +1280,102 @@ def parent_portal(token):
               for i in invs if i["status"] != "paid")
     return render_template("portal.html", school=s, st=st, att=att, invs=invs, pays=pays,
                            diary_rows=diary_rows, results=results, due=due, fmt=fmt)
+
+# ---------- AI Parent Assistant (Phase 2) ----------
+import re as _re
+
+def _parent_facts(d, st, s):
+    """SQLite se parent ke bache ke facts — LLM sirf wording ke liye."""
+    invs = d.execute("SELECT month, items, total, discount, paid, status FROM invoices WHERE student_id=? ORDER BY month DESC",
+                     (st["id"],)).fetchall()
+    due = sum((i["total"] or 0) - (i["discount"] or 0) - (i["paid"] or 0)
+              for i in invs if i["status"] != "paid")
+    inv_lines = [f"{i['month']}: total Rs {fmt(i['total'] or 0)}, discount Rs {fmt(i['discount'] or 0)}, "
+                 f"paid Rs {fmt(i['paid'] or 0)}, status {i['status']} ({i['items'] or ''})"
+                 for i in invs[:6]]
+    att = d.execute("""SELECT status, COUNT(*) c FROM attendance WHERE student_id=?
+                       AND date >= date('now','-30 days') GROUP BY status""", (st["id"],)).fetchall()
+    att_line = ", ".join(f"{a['status']}: {a['c']}" for a in att) or "koi record nahi"
+    diary_rows = d.execute("""SELECT date, subject, text FROM diary WHERE school_id=? AND class=?
+                              ORDER BY date DESC, id DESC LIMIT 5""",
+                           (s["id"], st["class"])).fetchall()
+    diary_lines = [f"{r['date']} [{r['subject'] or 'General'}]: {r['text']}" for r in diary_rows]
+    res_lines = []
+    for ex in d.execute("SELECT * FROM exams WHERE school_id=? ORDER BY id DESC", (s["id"],)):
+        rr = d.execute("SELECT obtained, total FROM marks WHERE exam_id=? AND student_id=?",
+                       (ex["id"], st["id"])).fetchall()
+        if rr:
+            ob = sum(x["obtained"] or 0 for x in rr); mx = sum(x["total"] or 0 for x in rr)
+            pct = (ob / mx * 100) if mx else 0
+            res_lines.append(f"{ex['name']}: {fmt(ob)}/{fmt(mx)} = {pct:.1f}% (Grade {grade_of(pct)})")
+    return {
+        "name": st["name"], "class": st["class"], "father": st["father_name"] or "",
+        "school": s["name"], "due": fmt(due),
+        "invoices": inv_lines or ["koi invoice nahi"],
+        "attendance_30d": att_line,
+        "diary": diary_lines or ["koi diary entry nahi"],
+        "results": res_lines or ["koi result nahi"],
+    }
+
+_INTENTS = {
+    "fees": ["fees", "fee", "فیس", "بقایا", "باقی", "due", "baqi", "payment", "challan", "پیسے", "رقم"],
+    "attendance": ["attendance", "hazri", "حاضری", "absent", "present", "chhutti", "چھٹی", "school aya", "gaya"],
+    "diary": ["diary", "ڈائری", "homework", "home work", "hw", "kaam", "کام"],
+    "results": ["result", "marks", "نمبر", "number", "grade", "exam", "امتحان", "report", "percentage"],
+}
+
+def _detect_intent(q):
+    ql = q.lower()
+    for intent, kws in _INTENTS.items():
+        if any(k in ql for k in kws):
+            return intent
+    return "general"
+
+AI_PARENT_SYSTEM = (
+    "You are a helpful school assistant for parents in Pakistan. "
+    "Answer ONLY from the FACTS given below — never invent fees, dates, marks, or names. "
+    "If the answer is not in the facts, say so honestly in the parent's language. "
+    "Reply in the SAME language/script as the parent's question "
+    "(Urdu script اردو, Roman Urdu, or English). Keep answers short and warm. "
+    "Money is always in Rs (Pakistani Rupees)."
+)
+
+@app.route("/p/<token>/ask", methods=["POST"])
+def parent_ask(token):
+    """AI Parent Assistant — JSON API. Token auth = sirf apne bache ka data."""
+    d = db()
+    t = d.execute("SELECT * FROM parent_tokens WHERE token=?", (token,)).fetchone()
+    if not t:
+        return {"error": "Ghalat token."}, 404
+    st = d.execute("SELECT * FROM students WHERE id=?", (t["student_id"],)).fetchone()
+    if not st:
+        return {"error": "Student nahi mila."}, 404
+    s = d.execute("SELECT * FROM schools WHERE id=?", (st["school_id"],)).fetchone()
+    data = request.get_json(silent=True) or {}
+    q = (data.get("q") or "").strip()[:500]
+    if not q:
+        return {"error": "Sawal likhein."}, 400
+    intent = _detect_intent(q)
+    facts = _parent_facts(d, st, s)
+    if intent == "general":
+        focus = "Give a brief overall summary: fee due, attendance (30 days), latest diary, latest result."
+    else:
+        focus = {"fees": "Focus on fee details: total due and invoice breakdown.",
+                 "attendance": "Focus on attendance in the last 30 days.",
+                 "diary": "Focus on the latest diary/homework entries.",
+                 "results": "Focus on exam results and grades."}[intent]
+    prompt = (f"School: {facts['school']}\nStudent: {facts['name']} (Class {facts['class']})\n"
+              f"FACTS:\n- Fee due: Rs {facts['due']}\n"
+              f"- Invoices: {'; '.join(facts['invoices'])}\n"
+              f"- Attendance (30d): {facts['attendance_30d']}\n"
+              f"- Diary: {' | '.join(facts['diary'])}\n"
+              f"- Results: {' | '.join(facts['results'])}\n\n"
+              f"Parent's question: {q}\n\n{focus}")
+    try:
+        answer, provider = ask_ai(prompt, system=AI_PARENT_SYSTEM, max_tokens=400)
+    except RuntimeError as e:
+        return {"error": f"AI error: {e}"}, 503
+    return {"answer": answer, "provider": provider}
 
 # ---------- Fee challan + discount + proof verify ----------
 @app.route("/dashboard/fees/challan/<int:inv>")

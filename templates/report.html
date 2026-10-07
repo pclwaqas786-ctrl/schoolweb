@@ -42,6 +42,12 @@
       <span class="pill">Position / پوزیشن: {{ pos }} / {{ total_students }}</span>
       <span class="grade">{{ grade }}</span>
     </div>
+    {% if ai_comment %}
+    <div style="margin:14px 0;padding:12px;border:2px dashed #17A2B8;border-radius:12px">
+      <b>🤖 Teacher's Comment</b>
+      <p style="white-space:pre-wrap" dir="auto">{{ ai_comment }}</p>
+    </div>
+    {% endif %}
     <div class="sign"><span>__________<br><small>Class Teacher</small></span><span>__________<br><small>Principal</small></span></div>
   </div>
 </div>

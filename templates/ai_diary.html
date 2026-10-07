@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}AI Diary Writer — {{ school.name }}{% endblock %}
+{% block body %}
+<h2>🤖 AI Diary / Notice Writer</h2>
+<nav class="tabs"><a href="{{ url_for('dashboard') }}">← Dashboard</a>
+<a href="{{ url_for('diary') }}">📝 Diary</a></nav>
+
+<div class="card">
+<h3>✍️ Rough points likhein — AI polished entry banayega</h3>
+<form method="post" class="form" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <label>Type<select name="kind"><option value="diary">Diary / Homework</option><option value="notice">Notice</option></select></label>
+  <label>Class<select name="class">{% for c in classes %}<option>{{ c }}</option>{% endfor %}</select></label>
+  <label>Subject<input name="subject" placeholder="Math"></label>
+  <label>Date<input type="date" name="date" value="{{ day }}"></label>
+  <label style="grid-column:1/-1">Rough points *<textarea name="points" rows="3" required
+    placeholder="misal: kal chapter 5 ka test hai, fees ki last date 20 hai, kal chhutti nahi hogi"></textarea></label>
+  <div><button class="btn small teal" name="action" value="generate">🤖 Generate with AI</button></div>
+</form>
+<p class="muted"><small>AI English + Urdu (اردو) dono me entry banayega. Generate ke baad edit karke save karein.</small></p>
+</div>
+
+{% if result %}
+<div class="card">
+<h3>✨ AI ne banaya <small class="muted">(via {{ provider }})</small></h3>
+<form method="post" class="form">
+  <input type="hidden" name="class" value="{{ cls }}">
+  <input type="hidden" name="date" value="{{ date }}">
+  <input type="hidden" name="subject" value="{{ subject }}">
+  <textarea name="final_text" rows="10" style="width:100%" dir="auto">{{ result }}</textarea>
+  <div style="margin-top:8px">
+    <button class="btn small teal" name="action" value="save">📮 Save as Diary Entry</button>
+    <a class="btn small" href="{{ url_for('ai_diary') }}">↺ Dobara generate</a>
+  </div>
+</form>
+</div>
+{% endif %}
+{% endblock %}

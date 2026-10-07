@@ -15,6 +15,7 @@ Apki public website: <a href="{{ url_for('school_home', slug=school.slug) }}"><c
   <a href="{{ url_for('attendance') }}">📋 Attendance</a>
   <a href="{{ url_for('exams') }}">📊 Exams</a>
   <a href="{{ url_for('diary') }}">📝 Diary</a>
+  <a href="{{ url_for('ai_diary') }}">🤖 AI Writer</a>
   {% endif %}
   {% if role in ('owner','accountant') %}
   <a href="{{ url_for('fees') }}">💰 Fees</a>

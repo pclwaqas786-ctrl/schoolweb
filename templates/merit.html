@@ -2,7 +2,8 @@
 {% block title %}Merit — {{ exam.name }}{% endblock %}
 {% block body %}
 <h2>🏆 {{ exam.name }} — Merit ({{ cls }})</h2>
-<nav class="tabs"><a href="{{ url_for('exams') }}">← Exams</a></nav>
+<nav class="tabs"><a href="{{ url_for('exams') }}">← Exams</a>
+<a href="{{ url_for('ai_comments', eid=exam.id, **{'class': cls}) }}">🤖 AI Report Comments</a></nav>
 <form method="get" class="form" style="display:flex;gap:10px;align-items:end">
   <label>Class<select name="class" onchange="this.form.submit()">{% for c in classes %}<option {{ 'selected' if c==cls }}>{{ c }}</option>{% endfor %}</select></label>
 </form>
