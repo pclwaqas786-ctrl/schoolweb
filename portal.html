@@ -39,6 +39,48 @@
 </div>
 
 <div class="card">
+  <h3>🤖 AI Assistant <small class="mut">— sawal puchein</small></h3>
+  <div id="aichat" style="max-height:260px;overflow-y:auto;border:2px solid #dfe5ee;border-radius:12px;padding:10px;margin-bottom:8px;background:#f8fbff">
+    <div class="mut" style="font-size:.9em">👋 Assalam-o-Alaikum! Fees, attendance, diary ya result ke bare me puchein — Urdu, Roman ya English me.</div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <input id="aiq" placeholder="misal: fees kitni baqi hai?" style="flex:1;margin:0">
+    <button class="btn" id="aisend" style="width:auto;padding:10px 22px">➤</button>
+  </div>
+  <small class="mut">Jawab sirf school ke record se — andaza nahi.</small>
+</div>
+<script>
+(function(){
+  var box = document.getElementById('aichat'),
+      inp = document.getElementById('aiq'),
+      btn = document.getElementById('aisend');
+  function addMsg(who, text){
+    var d = document.createElement('div');
+    d.style.cssText = 'margin:6px 0;padding:8px 12px;border-radius:12px;font-size:.93em;white-space:pre-wrap;' +
+      (who === 'you' ? 'background:#e7f6fa;text-align:right' : 'background:#f1f3f6');
+    d.textContent = text;
+    box.appendChild(d); box.scrollTop = box.scrollHeight;
+  }
+  function send(){
+    var q = inp.value.trim();
+    if(!q) return;
+    addMsg('you', q); inp.value = '';
+    addMsg('ai', '⏳ soch raha hun...');
+    fetch(window.location.pathname.replace(/\/$/,'') + '/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({q: q})
+    }).then(function(r){ return r.json(); }).then(function(j){
+      box.removeChild(box.lastChild);
+      addMsg('ai', j.answer || ('⚠️ ' + (j.error || 'jawab nahi aya')));
+    }).catch(function(){ box.removeChild(box.lastChild); addMsg('ai', '⚠️ Network error.'); });
+  }
+  btn.onclick = send;
+  inp.addEventListener('keydown', function(e){ if(e.key === 'Enter') send(); });
+})();
+</script>
+
+<div class="card">
   <h3>💰 Fee — <span class="due">Rs 1800</span> <small class="mut">due</small></h3>
   
   <div class="row"><span>2026-10<br><small class="mut">Tuition Fee 1500, Exam Fee 300</small></span>
@@ -75,9 +117,9 @@
 <div class="card">
   <h3>📝 Diary</h3>
   
-  <div class="row"><span><b>Urdu</b> <small class="mut">2026-10-07</small><br>Sabaq 6 ki khulasa likhna hai.</span></div>
+  <div class="row"><span><b>Urdu</b> <small class="mut">2026-10-12</small><br>Sabaq 6 ki khulasa likhna hai.</span></div>
   
-  <div class="row"><span><b>Math</b> <small class="mut">2026-10-07</small><br>Page 44 exercise 5 (Q1-Q10) yaad karke ayen.</span></div>
+  <div class="row"><span><b>Math</b> <small class="mut">2026-10-12</small><br>Page 44 exercise 5 (Q1-Q10) yaad karke ayen.</span></div>
   
 </div>
 
